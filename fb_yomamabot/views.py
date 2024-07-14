@@ -7,6 +7,10 @@ from django.http import HttpResponse
 import json
 from pprint import pprint
 
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
 class YoMamaBotView(generic.View):
     def get(self, request, *args, **kwargs):
         hub_verify_token = request.GET.get('hub.verify_token')
