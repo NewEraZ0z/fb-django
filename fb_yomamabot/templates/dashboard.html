@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Dashboard</title>
+    <style>
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .panel {
+            flex: 1;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+        }
+        #pages {
+            width: 20%;
+        }
+        #users {
+            width: 30%;
+        }
+        #conversation {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            flex: 1;
+        }
+        #input {
+            display: flex;
+        }
+        #input input {
+            flex: 1;
+        }
+        #input button {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="pages" class="panel">Pages</div>
+        <div id="users" class="panel">Users</div>
+        <div id="conversation" class="panel">
+            <div id="messages">Messages</div>
+            <div id="input">
+                <input type="text" id="messageInput" placeholder="Type a message...">
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const pagesPanel = document.getElementById('pages');
+        const usersPanel = document.getElementById('users');
+        const messagesPanel = document.getElementById('messages');
+
+        async function fetchConversations() {
+            const response = await fetch('/conversations/?platform=messenger');
+            const data = await response.json();
+            pagesPanel.innerHTML = data.data.map(conv => `<div onclick="fetchUsers('${conv.id}')">${conv.id}</div>`).join('');
+        }
+
+        async function fetchUsers(conversationId) {
+            const response = await fetch(`/messages/${conversationId}/`);
+            const data = await response.json();
+            usersPanel.innerHTML = data.messages.data.map(msg => `<div onclick="fetchMessages('${msg.id}')">${msg.id}</div>`).join('');
+        }
+
+        async function fetchMessages(messageId) {
+            const response = await fetch(`/message/${messageId}/`);
+            const data = await response.json();
+            messagesPanel.innerHTML = `<p>From: ${data.from.username}</p><p>Message: ${data.message}</p>`;
+        }
+
+        document.getElementById('sendButton').onclick = function() {
+            const messageInputDom = document.getElementById('messageInput');
+            const message = messageInputDom.value;
+            const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/room1/');
+            
+            chatSocket.onopen = function() {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';
+            };
+        };
+
+        fetchConversations();
+    </script>
+</body>
+</html>
