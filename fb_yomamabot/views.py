@@ -5,7 +5,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http.response import HttpResponse
-ACCESS_TOKEN=''   #paste your token here
+#ACCESS_TOKEN=''   #paste your token here
 VERYFY_TOKEN='5577784448555785'  #paste your token here
 
 jokes = {
