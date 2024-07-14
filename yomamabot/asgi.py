@@ -19,15 +19,15 @@ import os
 from django.core.asgi import get_asgi_application
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from fb_yomamabot import routing
+import fb_yomamabot.routing  # replace 'chatapp' with the name of your Django app
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yomamabot.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yomamabot.settings')  # replace 'myproject' with the name of your Django project
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            routing.websocket_urlpatterns
+            fb_yomamabot.routing.websocket_urlpatterns  # replace 'chatapp' with the name of your Django app
         )
     ),
 })
