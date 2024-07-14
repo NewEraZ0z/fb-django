@@ -124,3 +124,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+# settings.py
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis or another backend for production
+    },
+}
