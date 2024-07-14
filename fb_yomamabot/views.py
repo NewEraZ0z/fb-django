@@ -7,6 +7,7 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.shortcuts import render
 
 def dashboard(request):
     return render(request, 'dashboard.html')
