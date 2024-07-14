@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#*h2g-&mt7k-fg$e_$hoe7&e*i)m2zx==m#&yytk6f#r0qm_t8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bd4c64922742.ngrok.io','localhost']
+ALLOWED_HOSTS = ['https://fb-django.onrender.com']
 
 
 # Application definition
