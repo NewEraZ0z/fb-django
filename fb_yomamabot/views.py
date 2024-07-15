@@ -44,11 +44,11 @@ class YoMamaBotView(generic.View):
         return HttpResponse(status=200)
 
 def get_conversations(request):
-    page_id = "YOUR_PAGE_ID"
-    access_token = "YOUR_PAGE_ACCESS_TOKEN"
+    page_id = "338795865991565"
+    access_token = "EAAGnLttZBmZCMBO96zIN6ZACGfSn6xOzV3y2JLmlv8wiqDVIhDzfzTpeE7Uy6qZATCxoMJRroOp3aW7YrxWuu8eSyVPZBPtQZCQkAjFKyBmq91QPjUZA4HYPAtA13FUheASgGbgxWfS0jl7ZBI7wXCAzLaCTnAL8RSscbAbkNZCRmliTJ2nNJ1hfjuQKSkYGZAMGUM5EBVpwJBxxFJGCYnMp2nglgreZAy7XcYm"
     platform = request.GET.get('platform', 'messenger')
     
-    url = f"https://graph.facebook.com/v12.0/{page_id}/conversations"
+    url = f"https://graph.facebook.com/v20.0/{page_id}/conversations"
     params = {
         'platform': platform,
         'access_token': access_token
@@ -57,9 +57,9 @@ def get_conversations(request):
     return JsonResponse(response.json())
 
 def get_messages(request, conversation_id):
-    access_token = "YOUR_PAGE_ACCESS_TOKEN"
+    access_token = "EAAGnLttZBmZCMBO96zIN6ZACGfSn6xOzV3y2JLmlv8wiqDVIhDzfzTpeE7Uy6qZATCxoMJRroOp3aW7YrxWuu8eSyVPZBPtQZCQkAjFKyBmq91QPjUZA4HYPAtA13FUheASgGbgxWfS0jl7ZBI7wXCAzLaCTnAL8RSscbAbkNZCRmliTJ2nNJ1hfjuQKSkYGZAMGUM5EBVpwJBxxFJGCYnMp2nglgreZAy7XcYm"
     
-    url = f"https://graph.facebook.com/v12.0/{conversation_id}"
+    url = f"https://graph.facebook.com/v20.0/{conversation_id}"
     params = {
         'fields': 'messages',
         'access_token': access_token
@@ -68,9 +68,9 @@ def get_messages(request, conversation_id):
     return JsonResponse(response.json())
 
 def get_message_details(request, message_id):
-    access_token = "YOUR_PAGE_ACCESS_TOKEN"
+    access_token = "EAAGnLttZBmZCMBO96zIN6ZACGfSn6xOzV3y2JLmlv8wiqDVIhDzfzTpeE7Uy6qZATCxoMJRroOp3aW7YrxWuu8eSyVPZBPtQZCQkAjFKyBmq91QPjUZA4HYPAtA13FUheASgGbgxWfS0jl7ZBI7wXCAzLaCTnAL8RSscbAbkNZCRmliTJ2nNJ1hfjuQKSkYGZAMGUM5EBVpwJBxxFJGCYnMp2nglgreZAy7XcYm"
     
-    url = f"https://graph.facebook.com/v12.0/{message_id}"
+    url = f"https://graph.facebook.com/v20.0/{message_id}"
     params = {
         'fields': 'id,created_time,from,to,message',
         'access_token': access_token
@@ -79,7 +79,31 @@ def get_message_details(request, message_id):
     return JsonResponse(response.json())
 
 
-
+  @csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        message = data.get('message')
+        recipient_id = data.get('recipient_id')
+        
+        if message and recipient_id:
+            access_token = "EAAGnLttZBmZCMBO96zIN6ZACGfSn6xOzV3y2JLmlv8wiqDVIhDzfzTpeE7Uy6qZATCxoMJRroOp3aW7YrxWuu8eSyVPZBPtQZCQkAjFKyBmq91QPjUZA4HYPAtA13FUheASgGbgxWfS0jl7ZBI7wXCAzLaCTnAL8RSscbAbkNZCRmliTJ2nNJ1hfjuQKSkYGZAMGUM5EBVpwJBxxFJGCYnMp2nglgreZAy7XcYm"
+            url = f"https://graph.facebook.com/v20.0/me/messages"
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            payload = {
+                'recipient': {'id': recipient_id},
+                'message': {'text': message},
+                'access_token': access_token
+            }
+            response = requests.post(url, headers=headers, json=payload)
+            if response.status_code == 200:
+                return JsonResponse({'status': 'success', 'message': message})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Failed to send message', 'response': response.json()}, status=response.status_code)
+        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 
