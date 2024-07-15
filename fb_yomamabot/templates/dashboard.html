@@ -23,14 +23,7 @@
         }
     </style>
 </head>
-<body>
-    <div id="chat_widget">
-        <!-- Chat messages will be displayed here -->
-    </div>
-    <input type="text" id="message_input" placeholder="Type your message...">
-    <button id="send_button">Send</button>
-
-    <script>
+<script>
         document.getElementById('send_button').onclick = function() {
             const message = document.getElementById('message_input').value;
             const recipientId = '338795865991565';  // Replace with the actual recipient ID
