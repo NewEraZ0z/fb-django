@@ -24,79 +24,44 @@
     </style>
 </head>
 <body>
-    <div id="left-panel">
-        <!-- Left panel content: List of connected pages -->
+    <div id="chat_widget">
+        <!-- Chat messages will be displayed here -->
     </div>
-    <div id="middle-panel">
-        <!-- Middle panel content: List of users for the selected page -->
-    </div>
-    <div id="right-panel">
-        <!-- Right panel content: Conversation with the selected user -->
-        <div id="chat-widget">
-            <div id="messages"></div>
-            <input type="text" id="message-input" placeholder="Type your message here...">
-            <button id="send-button">Send</button>
-        </div>
-    </div>
+    <input type="text" id="message_input" placeholder="Type your message...">
+    <button id="send_button">Send</button>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const sendButton = document.getElementById("send-button");
-            const messageInput = document.getElementById("message-input");
-            const messagesDiv = document.getElementById("messages");
-
-            if (sendButton && messageInput && messagesDiv) {
-                sendButton.onclick = function() {
-                    const messageText = messageInput.value;
-                    if (messageText.trim()) {
-                        // Display the message in the chat widget
-                        const messageElement = document.createElement("div");
-                        messageElement.textContent = messageText;
-                        messagesDiv.appendChild(messageElement);
-
-                        // Clear the input field
-                        messageInput.value = "";
-
-                        // Send the message to the server (example using fetch)
-                        fetch('/send_message/', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': getCookie('csrftoken')
-                            },
-                            body: JSON.stringify({ message: messageText })
-                        }).then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        }).then(data => {
-                            console.log('Message sent successfully:', data);
-                        }).catch(error => {
-                            console.error('Error sending message:', error);
-                        });
-                    }
-                };
-            } else {
-                console.error("One or more elements not found in the DOM.");
-            }
-
-            // Function to get CSRF token from cookie
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    const cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
+        document.getElementById('send_button').onclick = function() {
+            const message = document.getElementById('message_input').value;
+            const recipientId = '338795865991565';  // Replace with the actual recipient ID
+            
+            fetch('/send_message/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: message,
+                    recipient_id: recipientId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log('Message sent:', data.message);
+                    // Update the chat widget with the sent message
+                    const chatWidget = document.getElementById('chat_widget');
+                    const newMessage = document.createElement('div');
+                    newMessage.textContent = data.message;
+                    chatWidget.appendChild(newMessage);
+                } else {
+                    console.error('Error:', data.message);
                 }
-                return cookieValue;
-            }
-        });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
     </script>
 </body>
 </html>
