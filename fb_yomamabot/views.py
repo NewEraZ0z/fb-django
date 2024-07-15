@@ -86,12 +86,26 @@ def send_message(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode('utf-8'))
         message = data.get('message')
-        # Implement the logic to send the message to Facebook Messenger
-        # and update the conversation
-        return JsonResponse({'status': 'success', 'message': message})
-    return JsonResponse({'status': 'error'}, status=400)
-
-
+        recipient_id = data.get('recipient_id')
+        
+        if message and recipient_id:
+            access_token = "EAAGnLttZBmZCMBOw56UDQBh2CuN2482Ukt4yVt5HHFyYZCOlQnFlTLdeFVGhniGZAc5GtOZAFTiVDwAK9khDTrrSYg6AC0ElkzZAkZCAaPQGb8eFdZB3sIrGw8mZCdIPih114yhlrFgQ7VvAxKSHGfF09VFxeWZCAXXcLNT2QfbspfEiQbPI4gtKj8xwkWRb7RhYIzScaJn0MUEwZDZD"
+            url = f"https://graph.facebook.com/v20.0/me/messages"
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            payload = {
+                'recipient': {'id': recipient_id},
+                'message': {'text': message},
+                'access_token': access_token
+            }
+            response = requests.post(url, headers=headers, json=payload)
+            if response.status_code == 200:
+                return JsonResponse({'status': 'success', 'message': message})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Failed to send message', 'response': response.json()}, status=response.status_code)
+        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 
 
