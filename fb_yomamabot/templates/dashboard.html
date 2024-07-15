@@ -1,70 +1,5 @@
+
 <!DOCTYPE html>
-<head>
-     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <style>
-        .left-panel, .middle-panel, .right-panel {
-            float: left;
-            width: 30%;
-            height: 100vh;
-            border: 1px solid #ccc;
-            overflow-y: scroll;
-        }
-        .right-panel {
-            width: 40%;
-        }
-        .chat-window {
-            height: 80vh;
-            overflow-y: auto;
-        }
-        .input-area {
-            height: 20vh;
-        }
-    </style>
-</head>
-<script>
-        document.getElementById('send_button').onclick = function() {
-            const message = document.getElementById('message_input').value;
-            const recipientId = '338795865991565';  // Replace with the actual recipient ID
-            
-            fetch('/send_message/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: message,
-                    recipient_id: recipientId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Message sent:', data.message);
-                    // Update the chat widget with the sent message
-                    const chatWidget = document.getElementById('chat_widget');
-                    const newMessage = document.createElement('div');
-                    newMessage.textContent = data.message;
-                    chatWidget.appendChild(newMessage);
-                } else {
-                    console.error('Error:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        };
-    </script>
-</body>
-</html>
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -156,4 +91,4 @@
     </script>
 </body>
 </html>
- -->
+
