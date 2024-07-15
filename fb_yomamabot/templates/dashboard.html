@@ -1,4 +1,103 @@
 <!DOCTYPE html>
+<html>
+<head>
+    <title>Your Dashboard</title>
+    <style>
+        .left-panel, .middle-panel, .right-panel {
+            float: left;
+            width: 30%;
+            height: 100vh;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+        }
+        .right-panel {
+            width: 40%;
+        }
+        .chat-window {
+            height: 80vh;
+            overflow-y: auto;
+        }
+        .input-area {
+            height: 20vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="left-panel">
+        <ul>
+            {% for page in pages %}
+                <li><a href="#" data-page-id="{{ page.id }}">{{ page.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="middle-panel">
+        <!-- User list will be dynamically loaded here -->
+    </div>
+    <div class="right-panel">
+        <div class="chat-window" id="chat-window">
+            <!-- Chat messages will be displayed here -->
+        </div>
+        <div class="input-area">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        var chatSocket = null;
+        var currentUserId = null;
+
+        // Connect to WebSocket
+        function connectChatSocket(userId) {
+            if (chatSocket) {
+                chatSocket.close();
+            }
+            currentUserId = userId;
+            chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/' + userId + '/');
+
+            chatSocket.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var message = data['message'];
+                var sender = data['from'];
+
+                var chatWindow = document.getElementById('chat-window');
+                var newMessage = document.createElement('div');
+                newMessage.innerText = (sender === 'agent' ? 'You: ' : 'User: ') + message;
+                chatWindow.appendChild(newMessage);
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+        }
+
+        document.getElementById('send-btn').onclick = function(e) {
+            var messageInputDom = document.getElementById('chat-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender_id': currentUserId
+            }));
+            messageInputDom.value = '';
+        };
+
+        // Example: Handle clicking on a user to load chat
+        document.querySelector('.middle-panel').addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                var userId = e.target.getAttribute('data-user-id');
+                connectChatSocket(userId);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -90,3 +189,4 @@
     </script>
 </body>
 </html>
+ -->
