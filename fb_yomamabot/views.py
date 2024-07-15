@@ -81,6 +81,17 @@ def get_message_details(request, message_id):
     return JsonResponse(response.json())
 
 
+@csrf_exempt
+def send_message(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        message = data.get('message')
+        # Implement the logic to send the message to Facebook Messenger
+        # and update the conversation
+        return JsonResponse({'status': 'success', 'message': message})
+    return JsonResponse({'status': 'error'}, status=400)
+
+
 
 
 
