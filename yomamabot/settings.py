@@ -38,11 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
     
 ]
 
-ASGI_APPLICATION = 'yomamabot.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,7 +70,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'yomamabot.wsgi.application'
 
 
 # Database
@@ -124,10 +121,3 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-# settings.py
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis or another backend for production
-    },
-}
