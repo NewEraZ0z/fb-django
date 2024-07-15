@@ -28,11 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['fb-django.onrender.com']
 
 
-# facebook access token page
-
-FACEBOOK_PAGE_ACCESS_TOKEN = 'EAAGnLttZBmZCMBO1OAekjm6r9EfARzInILy6AB0sLJn3l89wz7FpCpVlgqz06zPIVjTlsd7WPaa6UpIOdtexmBZB2o3csqZAJCFZCuXPZBPtzlJ7jBFRdBaizZC7LGXAKrgWO1PjBtX8houxxE5XpaI5Q4APXbzc2xMZCAQzRmvw8lCAOu6DsVriM8rxHgEvvokK902JnqYokwZDZD'
-
-
 # Application definition
 
 INSTALLED_APPS = [
