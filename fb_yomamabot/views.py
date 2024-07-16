@@ -32,27 +32,39 @@ class YoMamaBotView(View):
 def chat_widget(request):
     return render(request, 'chat_widget.html')
 
+# recipient_id = '338795865991565'
+
+
 @csrf_exempt
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         message = data.get('message')
-        # Your Facebook page access token
+        recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
         page_access_token = 'EAAGnLttZBmZCMBO5Tc8meqcpnA3pM7CfQy7hWCMpbYwDxaC77aocZBGmZAvehtOPGnUsuo8ZAlXYZAZBa2GDiZAb2BqMo9hL5mHfLUr96BfBt9Hjpgtorsk9K0H6xlZApDn5KOQCd8FQ6jjR4h8JcaBcunUp0BM7dvG4remfrR2Y10xmp8KP05IbMmDGKCEVHDlO9CoMOInqCZBQZDZD'
-        # Your Facebook page ID
-        recipient_id = '338795865991565'
-        # Send the message to Facebook
-        post_message_url = f'https://graph.facebook.com/v20.0/me/messages?access_token={page_access_token}'
-        response_msg = json.dumps({
+
+        post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
+        response_msg = {
             "recipient": {"id": recipient_id},
+            "messaging_type": "RESPONSE",  # Or "UPDATE" based on your use case
             "message": {"text": message}
-        })
-        requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
-        return JsonResponse({"status": "Message sent!"})
+        }
+
+        response = requests.post(post_message_url, 
+                                 params={"access_token": page_access_token},
+                                 headers={"Content-Type": "application/json"},
+                                 data=json.dumps(response_msg))
+        response_data = response.json()
+
+        # Log the response for debugging
+        print(f"Response Status Code: {response.status_code}")
+        print(f"Response Data: {response_data}")
+
+        if response.status_code == 200:
+            return JsonResponse({"status": "Message sent!"})
+        else:
+            return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
     return JsonResponse({"status": "Invalid request"}, status=400)
-
-
-
 
 
 
