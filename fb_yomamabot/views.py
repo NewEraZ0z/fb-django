@@ -23,10 +23,22 @@ class YoMamaBotView(View):
 
     def post(self, request, *args, **kwargs):
         incoming_message = json.loads(request.body.decode('utf-8'))
+        channel_layer = get_channel_layer()
+
         for entry in incoming_message['entry']:
             for message in entry['messaging']:
                 if 'message' in message:
                     pprint(message)
+                    sender_id = message['sender']['id']
+                    text = message['message']['text']
+                    async_to_sync(channel_layer.group_send)(
+                        "chat_group",
+                        {
+                            "type": "chat_message",
+                            "message": text,
+                            "sender_id": sender_id,
+                        },
+                    )
         return HttpResponse(status=200)
 
 def chat_widget(request):
