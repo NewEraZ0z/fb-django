@@ -2,4 +2,4 @@ Django==5.0.7
 pprint36==3.9.16.0
 gunicorn==22.0.0
 requests==2.32.3
-uvicorn==0.30.1
+uvicorn[standard]
