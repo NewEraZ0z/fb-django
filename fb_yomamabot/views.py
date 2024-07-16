@@ -32,7 +32,7 @@ class YoMamaBotView(View):
 def chat_widget(request):
     return render(request, 'chat_widget.html')
 
-# recipient_id = '338795865991565'
+# recipient_id = '7812277818885789'
 
 
 @csrf_exempt
@@ -42,7 +42,7 @@ def send_message(request):
         message = data.get('message')
         recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
         page_access_token = 'EAAGnLttZBmZCMBO5Tc8meqcpnA3pM7CfQy7hWCMpbYwDxaC77aocZBGmZAvehtOPGnUsuo8ZAlXYZAZBa2GDiZAb2BqMo9hL5mHfLUr96BfBt9Hjpgtorsk9K0H6xlZApDn5KOQCd8FQ6jjR4h8JcaBcunUp0BM7dvG4remfrR2Y10xmp8KP05IbMmDGKCEVHDlO9CoMOInqCZBQZDZD'
-
+        recipient_id = '7812277818885789'
         post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
         response_msg = {
             "recipient": {"id": recipient_id},
