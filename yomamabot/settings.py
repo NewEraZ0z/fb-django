@@ -69,7 +69,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'yomamabot.wsgi.application'
 
 
 # Database
