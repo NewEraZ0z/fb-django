@@ -9,6 +9,12 @@ import json
 from pprint import pprint
 import requests
 
+
+def chat_widget(request):
+    return render(request, 'chat_widget.html')
+
+
+
 class YoMamaBotView(View):
     def get(self, request, *args, **kwargs):
         hub_verify_token = request.GET.get('hub.verify_token')
