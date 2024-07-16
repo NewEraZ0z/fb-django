@@ -13,7 +13,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from fb_yomamabot.routing import websocket_urlpatterns
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fb_yomamabot.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yomamabot.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
