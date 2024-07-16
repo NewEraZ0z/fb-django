@@ -101,6 +101,15 @@
             console.error('Chat socket closed unexpectedly');
         };
 
+         const messageInput = document.getElementById('message');
+        if (messageInput) {
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+
         async function sendMessage() {
             const message = document.getElementById('message').value;
             const response = await fetch('/send_message/', {
@@ -112,13 +121,13 @@
                 body: JSON.stringify({message: message})
             });
             const result = await response.json();
-            alert(result.status);
+            //alert(result.status);
 
             // Clear input after sending message
             document.getElementById('message').value = '';
 
             // Display outgoing message in chat window
-            displayMessage(message, 'outgoing');
+            //displayMessage(message, 'outgoing');
         }
 
         function displayMessage(text, type) {
