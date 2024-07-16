@@ -1,7 +1,113 @@
 <!-- # templates/chat_widget.html -->
 
-
 <!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .sent {
+            text-align: right;
+        }
+        .received {
+            text-align: left;
+        }
+        .message-input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .send-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .send-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const chatSocket = new WebSocket(
+                (window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
+                window.location.host +
+                '/ws/chat/'
+            );
+
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const messageContainer = document.getElementById('messages');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'received');
+                messageElement.textContent = data.message;
+                messageContainer.appendChild(messageElement);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            document.getElementById('send-button').onclick = function(e) {
+                const messageInputDom = document.getElementById('message');
+                const message = messageInputDom.value;
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+
+                const messageContainer = document.getElementById('messages');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'sent');
+                messageElement.textContent = message;
+                messageContainer.appendChild(messageElement);
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+
+                messageInputDom.value = '';
+            };
+        });
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>Chat Widget</h1>
+        <div id="messages" class="messages"></div>
+        <input type="text" id="message" class="message-input" placeholder="Type your message here...">
+        <button id="send-button" class="send-button">Send</button>
+    </div>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Chat Widget</title>
@@ -146,7 +252,7 @@
         </div>
     </div>
 </body>
-</html>
+</html> -->
 
 
 
