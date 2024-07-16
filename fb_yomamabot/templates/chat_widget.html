@@ -1,5 +1,27 @@
-<!-- templates/chat_widget.html -->
+# templates/chat_widget.html
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Widget</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div id="chat-container">
+        <div id="messages-container"></div>
+        <div id="input-container">
+            <input type="text" id="message-input" placeholder="Type your message here...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    <script src="{% static 'scripts.js' %}"></script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Chat Widget</title>
@@ -24,4 +46,4 @@
     <input type="text" id="message" placeholder="Type your message here...">
     <button onclick="sendMessage()">Send</button>
 </body>
-</html>
+</html> -->
