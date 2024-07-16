@@ -79,7 +79,19 @@
             background-color: #005aa7;
         }
     </style>
-    <script>
+  <script>
+       // WebSocket connection
+const chatSocket = new WebSocket(
+    'wss://fb-django.onrender.com/ws/chat/'
+);
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const message = data['message'];
+
+            // Display incoming message in chat window
+            displayMessage(message.text, 'incoming');
+        };
+
         async function sendMessage() {
             const message = document.getElementById('message').value;
             const response = await fetch('/send_message/', {
@@ -126,7 +138,7 @@
             <h1>Chat Widget</h1>
         </div>
         <div id="chat-messages" class="chat-messages">
-       <!-- Incoming and outgoing messages will be displayed here -->
+            <!-- Incoming and outgoing messages will be displayed here -->
         </div>
         <div class="message-input">
             <input type="text" id="message" placeholder="Type your message here...">
@@ -135,11 +147,6 @@
     </div>
 </body>
 </html>
-
-
-
-
-
 
 
 
