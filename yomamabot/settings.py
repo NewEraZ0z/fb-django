@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     
 ]
 
+WSGI_APPLICATION = 'yomamabot.wsgi.application'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
