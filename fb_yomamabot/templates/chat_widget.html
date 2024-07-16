@@ -147,45 +147,27 @@
             displayMessage(message, 'outgoing');
         }
 
-        function displayMessage(text) {
-    const chatMessages = document.getElementById('chat-messages');
-    const messageElement = document.createElement('div');
-    messageElement.className = 'message incoming-message';
-
-    const messageText = document.createElement('div');
-    messageText.className = 'message-text';
-    messageText.textContent = text;
-
-    const messageTime = document.createElement('div');
-    messageTime.className = 'message-time';
-    messageTime.textContent = new Date().toLocaleTimeString();
-
-    messageElement.appendChild(messageText);
-    messageElement.appendChild(messageTime);
-
-    chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+    
         
-        // function displayMessage(text, type) {
-        //     const chatMessages = document.getElementById('chat-messages');
-        //     const messageElement = document.createElement('div');
-        //     messageElement.className = 'message ' + (type === 'incoming' ? 'incoming-message' : 'outgoing-message');
+        function displayMessage(text, type) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message ' + (type === 'incoming' ? 'incoming-message' : 'outgoing-message');
 
-        //     const messageText = document.createElement('div');
-        //     messageText.className = 'message-text';
-        //     messageText.textContent = text;
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = text;
 
-        //     const messageTime = document.createElement('div');
-        //     messageTime.className = 'message-time';
-        //     messageTime.textContent = new Date().toLocaleTimeString();
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = new Date().toLocaleTimeString();
 
-        //     messageElement.appendChild(messageText);
-        //     messageElement.appendChild(messageTime);
+            messageElement.appendChild(messageText);
+            messageElement.appendChild(messageTime);
 
-        //     chatMessages.appendChild(messageElement);
-        //     chatMessages.scrollTop = chatMessages.scrollHeight;
-        // }
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
         
     </script>
 </body>
