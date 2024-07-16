@@ -78,9 +78,20 @@
             background-color: #005aa7;
         }
     </style>
-    <script>
-        const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
+  </head>
+<body>
+    <div class="chat-container">
+        <!-- Your chat container HTML -->
+        <div class="message-input">
+            <input id="message" type="text" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
 
+    <script>
+        // Your JavaScript code here
+        const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
+        
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             displayMessage(data.message, 'incoming');
@@ -90,11 +101,14 @@
             console.error('Chat socket closed unexpectedly');
         };
 
-        document.getElementById('message').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+        const messageInput = document.getElementById('message');
+        if (messageInput) {
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
 
         async function sendMessage() {
             const message = document.getElementById('message').value;
@@ -127,18 +141,6 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     </script>
-</head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Live Chat</h2>
-        </div>
-        <div id="chat-messages" class="chat-messages"></div>
-        <div class="message-input">
-            <input id="message" type="text" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
 </body>
 </html>
 
