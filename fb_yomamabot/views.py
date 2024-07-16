@@ -7,6 +7,8 @@ from django.http import HttpResponse, JsonResponse
 import json
 from pprint import pprint
 import requests
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class YoMamaBotView(View):
     def get(self, request, *args, **kwargs):
