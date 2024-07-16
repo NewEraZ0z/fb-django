@@ -8,7 +8,7 @@ import json
 from pprint import pprint
 import requests
 from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync  # Import this
 
 class YoMamaBotView(View):
     def get(self, request, *args, **kwargs):
@@ -25,21 +25,17 @@ class YoMamaBotView(View):
 
     def post(self, request, *args, **kwargs):
         incoming_message = json.loads(request.body.decode('utf-8'))
-        channel_layer = get_channel_layer()
-
+        channel_layer = get_channel_layer()  # Get the channel layer
         for entry in incoming_message['entry']:
             for message in entry['messaging']:
                 if 'message' in message:
                     pprint(message)
-                    sender_id = message['sender']['id']
-                    text = message['message']['text']
                     async_to_sync(channel_layer.group_send)(
-                        "chat_group",
+                        "chat_%s" % message['sender']['id'],
                         {
-                            "type": "chat_message",
-                            "message": text,
-                            "sender_id": sender_id,
-                        },
+                            'type': 'chat_message',
+                            'message': message['message']['text']
+                        }
                     )
         return HttpResponse(status=200)
 
