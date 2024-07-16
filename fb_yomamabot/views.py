@@ -11,6 +11,7 @@ import json
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import requests
+from pprint import pprint
 
 class YoMamaBotView(View):
     def get(self, request, *args, **kwargs):
