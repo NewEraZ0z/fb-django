@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['fb-django.onrender.com']
 
-
+CSRF_TRUSTED_ORIGINS = ['https://fb-django.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
