@@ -38,7 +38,7 @@ def send_message(request):
         data = json.loads(request.body)
         message = data.get('message')
         # Your Facebook page access token
-        page_access_token = 'EAAGnLttZBmZCMBOw56UDQBh2CuN2482Ukt4yVt5HHFyYZCOlQnFlTLdeFVGhniGZAc5GtOZAFTiVDwAK9khDTrrSYg6AC0ElkzZAkZCAaPQGb8eFdZB3sIrGw8mZCdIPih114yhlrFgQ7VvAxKSHGfF09VFxeWZCAXXcLNT2QfbspfEiQbPI4gtKj8xwkWRb7RhYIzScaJn0MUEwZDZD'
+        page_access_token = 'EAAGnLttZBmZCMBO5Tc8meqcpnA3pM7CfQy7hWCMpbYwDxaC77aocZBGmZAvehtOPGnUsuo8ZAlXYZAZBa2GDiZAb2BqMo9hL5mHfLUr96BfBt9Hjpgtorsk9K0H6xlZApDn5KOQCd8FQ6jjR4h8JcaBcunUp0BM7dvG4remfrR2Y10xmp8KP05IbMmDGKCEVHDlO9CoMOInqCZBQZDZD'
         # Your Facebook page ID
         recipient_id = '338795865991565'
         # Send the message to Facebook
