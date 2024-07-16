@@ -38,10 +38,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     
 ]
 
 WSGI_APPLICATION = 'yomamabot.wsgi.application'
+# Configure ASGI application
+ASGI_APPLICATION = 'yomamabot.asgi.application'
+
+# settings.py
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [os.environ.get('redis://red-cqbbsd0gph6c73es08dg:6379', 'redis://localhost:6379')],
+        },
+    },
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
