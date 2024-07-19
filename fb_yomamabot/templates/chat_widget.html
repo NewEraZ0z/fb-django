@@ -5,7 +5,173 @@
 <head>
     <title>Chat Widget</title>
     <style>
-        body {
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    gap: 10px;
+    padding: 20px;
+}
+
+.panel {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel.left {
+    max-width: 300px;
+}
+
+.panel.right {
+    max-width: 300px;
+}
+
+h2, h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.page-item:hover {
+    background-color: #f0f0f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page-item strong {
+    font-size: 16px;
+}
+
+.page-item span {
+    font-size: 14px;
+    color: #666;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.user-item:hover {
+    background-color: #f0f0f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-item strong {
+    font-size: 16px;
+}
+
+.user-item span {
+    font-size: 14px;
+    color: #666;
+}
+
+.chat-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+}
+
+.message-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.message-input button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.message-input button:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+
+.incoming-message {
+    background-color: rgba(255, 165, 0, 0.3);
+    text-align: left;
+}
+
+.outgoing-message {
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: right;
+}
+
+
+        
+/*         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
@@ -170,18 +336,20 @@
     display: block;
 }
 
-
+ */
     </style>
 </head>
 <body>
-    <div id="dashboard">
-        
-    <div id="left-panel">
+   <div id="dashboard" class="container">
+       
+     <div id="left-panel" class="panel left">
         <h3>Pages</h3>
         <ul id="pages-list"></ul>
     </div>
 
-     <div id="user-list" class="user-list">
+<!--    <div id="user-list" class="user-list"> -->
+    <div id="user-list" class="panel right">
+            <h3>Users</h3>
          <!-- List of users will be displayed here -->
      </div>
         
