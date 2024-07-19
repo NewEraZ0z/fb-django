@@ -204,7 +204,7 @@
 
         //*********left panel
 
-        document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
     fetch('/fetch_pages/')
         .then(response => response.json())
         .then(data => {
@@ -212,7 +212,10 @@
                 const pagesList = document.getElementById('pages-list');
                 data.pages.forEach(page => {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `<strong>${page.name}</strong> <span>ID: ${page.id}</span><br><span>ACC.t: ${page.access_token}</span>`;
+                    listItem.className = 'page-item';
+                    listItem.setAttribute('data-page-id', page.id);
+                    listItem.setAttribute('data-access-token', page.access_token);
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`<br><span>${page.access_token</span>;
                     pagesList.appendChild(listItem);
                 });
             } else {
@@ -242,12 +245,36 @@
 // });
         
 // **** fatch users lste 
-// Function to fetch and display users
+document.addEventListener('DOMContentLoaded', function() {
+    const pagesList = document.getElementById('pages-list');
+    if (!pagesList) {
+        console.error('Element with ID pages-list not found');
+        return;
+    }
+
+    pagesList.addEventListener('click', function(event) {
+        const listItem = event.target.closest('.page-item');
+        if (listItem) {
+            const pageId = listItem.getAttribute('data-page-id');
+            const accessToken = listItem.getAttribute('data-access-token');
+            if (pageId && accessToken) {
+                loadUsers(pageId, accessToken);
+            } else {
+                console.error('Page ID or Access Token missing');
+            }
+        }
+    });
+});
+
 function loadUsers(pageId, accessToken) {
     fetch(`/fetch_users/?page_id=${pageId}&access_token=${accessToken}`)
         .then(response => response.json())
         .then(data => {
             const userList = document.getElementById('user-list');
+            if (!userList) {
+                console.error('Element with ID user-list not found');
+                return;
+            }
             userList.innerHTML = ''; // Clear existing content
 
             if (data.users) {
@@ -265,18 +292,6 @@ function loadUsers(pageId, accessToken) {
         })
         .catch(error => console.error('Error fetching users:', error));
 }
-
-// Event listener for page list items
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('pages-list').addEventListener('click', function(event) {
-        const listItem = event.target.closest('.page-item');
-        if (listItem) {
-            const pageId = listItem.getAttribute('data-page-id');
-            const accessToken = listItem.getAttribute('data-access-token');
-            loadUsers(pageId, accessToken);
-        }
-    });
-});
 
      // ******chat_widget******
         const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
