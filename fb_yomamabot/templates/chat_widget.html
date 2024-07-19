@@ -149,6 +149,19 @@
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 //**** users listes ****
+.user-list {
+    margin-top: 20px;
+}
+
+.user-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.user-item:hover {
+    background-color: #f0f0f0;
+}
 
     </style>
 </head>
@@ -159,6 +172,10 @@
         <h3>Pages</h3>
         <ul id="pages-list"></ul>
     </div>
+
+     <div id="user-list" class="user-list">
+         <!-- List of users will be displayed here -->
+     </div>
         
     <div class="chat-container">
         <div class="chat-header">
@@ -216,7 +233,39 @@
 //         .catch(error => console.error('Error fetching pages:', error));
 // });
         
+// **** fatch users lste 
+          async function loadUsers(pageId, accessToken) {
+        const response = await fetch(`/fetch_users/?page_id=${pageId}&access_token=${accessToken}`);
+        const users = await response.json();
+        displayUsers(users);
+    }
 
+    function displayUsers(users) {
+        const userList = document.getElementById('user-list');
+        userList.innerHTML = '';  // Clear current list
+        users.forEach(user => {
+            const userItem = document.createElement('div');
+            userItem.className = 'user-item';
+            userItem.innerText = user.name;
+            userItem.onclick = () => loadUserMessages(user.id);
+            userList.appendChild(userItem);
+        });
+    }
+
+    function loadUserMessages(userId) {
+        // Load user messages
+        console.log('Load messages for user:', userId);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.page-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.getAttribute('data-page-id');
+                const accessToken = item.getAttribute('data-access-token');
+                loadUsers(pageId, accessToken);
+            });
+        });
+    });
         
 
 
