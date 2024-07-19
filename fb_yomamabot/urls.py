@@ -1,8 +1,10 @@
 # yomamabot/fb_yomamabot/urls.py
 from django.urls import path
-from .views import YoMamaBotView, chat_widget, send_message, fetch_pages, get_conversations
+from .views import YoMamaBotView, chat_widget, send_message, fetch_pages, fetch_users
 
 
+
+   
 
 
 urlpatterns = [
@@ -10,7 +12,7 @@ urlpatterns = [
     path('chat_widget', chat_widget, name='chat_widget'),
     path('fetch_pages/', fetch_pages, name='fetch_pages'),
     path('send_message/', send_message, name='send_message'),
-    path('get_conversations/<str:page_id>/', get_conversations, name='get_conversations'),
+    path('fetch_users/<str:page_id>/', fetch_users, name='fetch_users'),
 ]
 
 
