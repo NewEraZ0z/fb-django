@@ -81,7 +81,7 @@ def send_message(request):
 
 
 
-
+# load liste pages 
 def fetch_pages(request):
     user_access_token = 'EAAGnLttZBmZCMBOZBD7esrrJuHQzhAYMnlYhaQh7DRZA8qEICBd543p89vraKegpDPAaU8bGY3YKV89pUd6WXWEUZCBjEGZB8JgvKEHEzJdwCB1bfSG3VSUGPewcmjbGRG4ZABBnVZABItM4MWG2fzV1NkcbdOeo5ozcdMHMkATzNgHwHtveP2INJdPqyuTSg4eeLHLhMtjhmZAZBevxyCpGqqFSoDHwZDZD'  # Replace with your actual user access token
     user_id = '122103504482407107'  # Replace with your actual user ID
@@ -96,3 +96,30 @@ def fetch_pages(request):
     else:
         return JsonResponse({'error': 'Failed to fetch pages'}, status=response.status_code)
 
+
+#load users page 
+def fetch_users(request, page_id):
+    access_token = request.GET.get('access_token')
+    if not access_token:
+        return JsonResponse({'error': 'Access token is required'}, status=400)
+
+    url = f"https://graph.facebook.com/v20.0/{page_id}/conversations"
+    params = {
+        'access_token': access_token,
+        'platform': 'messenger',  # or 'instagram' depending on your use case
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    # Extract user details from conversations
+    users = []
+    if 'data' in data:
+        for conversation in data['data']:
+            conversation_id = conversation['id']
+            conversation_url = f"https://graph.facebook.com/v20.0/{conversation_id}?fields=participants"
+            conversation_response = requests.get(conversation_url, params={'access_token': access_token})
+            conversation_data = conversation_response.json()
+            if 'participants' in conversation_data:
+                users.extend(conversation_data['participants']['data'])
+
+    return JsonResponse({'users': users})
