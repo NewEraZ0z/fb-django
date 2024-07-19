@@ -53,8 +53,8 @@ def send_message(request):
         data = json.loads(request.body)
         message = data.get('message')
         recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
-        page_access_token = 'EAAGnLttZBmZCMBO7MdYNGz1ryniyTIX3ZChseN5zujxEmiZCMzWLh4aVNr7xbg9fozbXcPpRZAKNDOKAUwKZAHou75w4ajXkIGZCEvYrZBdlkxU1iIREZBWZBnI8kOgg5l8pn26psQmH8QbZC39PlmnSZAPivyCHpFrwMdHK18itc43zbCQcKpBxW654R62ar8seGffrTJkLd3MrDQZDZD'
-        recipient_id = '7812277818885789'
+        page_access_token = 'access_toekn_page'
+        recipient_id = 'user_id_messenger'
         post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
         response_msg = {
             "recipient": {"id": recipient_id},
@@ -83,8 +83,8 @@ def send_message(request):
 
 # load liste pages 
 def fetch_pages(request):
-    user_access_token = 'EAAGnLttZBmZCMBO6TqpdQkPxHoutJMioVO1pee28rolEp2syg5wZBC1svjSY1ZB89EseMaq1YIWnrqOBOZCGyaNksOPekOjQFvnrdxsk0536A6n0zTzzuELdGzhPBuOB1uTkRZAu9Vt0S8cxZAOnyK6GSsR8cvNujmkLl9UGrKS0p5LPZBDHAJmhG7RMVrGIrD4oaoomn0jIUIpUCGxPoLNXDJfxDAZDZD'  # Replace with your actual user access token
-    user_id = '122103504482407107'  # Replace with your actual user ID
+    user_access_token = 'access_token_app'  # Replace with your actual user access token
+    user_id = 'user_id page'  # Replace with your actual user ID
     url = f"https://graph.facebook.com/{user_id}/accounts"
     params = {
         'access_token': user_access_token,
