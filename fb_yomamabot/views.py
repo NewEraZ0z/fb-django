@@ -86,10 +86,10 @@ def send_message(request):
         message = data.get('message')
         recipient_id = data.get('recipient_id')
         access_token = data.get('access_token')
-        
+
         if not recipient_id or not access_token:
             return JsonResponse({"status": "Error", "details": "Recipient ID or Access Token missing"}, status=400)
-        
+
         post_message_url = 'https://graph.facebook.com/v20.0/me/messages'
         response_msg = {
             "recipient": {"id": recipient_id},
@@ -103,7 +103,6 @@ def send_message(request):
                                  data=json.dumps(response_msg))
         response_data = response.json()
 
-        # Log the response for debugging
         print(f"Response Status Code: {response.status_code}")
         print(f"Response Data: {response_data}")
 
@@ -111,6 +110,7 @@ def send_message(request):
             return JsonResponse({"status": "Message sent!"})
         else:
             return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
+
     return JsonResponse({"status": "Invalid request"}, status=400)
 
 
