@@ -454,8 +454,8 @@ function loadConversation(conversationId, accessToken) {
 
 async function sendMessage() {
     const message = document.getElementById('message').value;
-    const recipientId = document.getElementById('data-conversation-id').value;
-    const accessToken = document.getElementById('data-access-token').value;
+    const recipientId = document.getElementById('data-conversation-id').value; // Ensure this value is set
+    const accessToken = document.getElementById('data-access-token').value; // Ensure this value is set
 
     if (!recipientId || !accessToken) {
         console.error('Recipient ID or Access Token is missing');
@@ -470,7 +470,7 @@ async function sendMessage() {
         },
         body: JSON.stringify({
             message: message,
-            recipient_id: recipientId,
+            recipient_id: recipientId, // Make sure this is the correct ID
             access_token: accessToken
         })
     });
@@ -487,6 +487,7 @@ async function sendMessage() {
         console.error('Error sending message:', result);
     }
 }
+
 
 function displayMessage(message, type) {
     const chatMessages = document.getElementById('chat-messages');
