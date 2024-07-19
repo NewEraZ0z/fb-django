@@ -97,29 +97,4 @@ def fetch_pages(request):
         return JsonResponse({'error': 'Failed to fetch pages'}, status=response.status_code)
 
 
-#load users page 
-def fetch_users(request, page_id):
-    access_token = request.GET.get('access_token')
-    if not access_token:
-        return JsonResponse({'error': 'Access token is required'}, status=400)
 
-    url = f"https://graph.facebook.com/v20.0/{page_id}/conversations"
-    params = {
-        'access_token': access_token,
-        'platform': 'messenger',  # or 'instagram' depending on your use case
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-
-    # Extract user details from conversations
-    users = []
-    if 'data' in data:
-        for conversation in data['data']:
-            conversation_id = conversation['id']
-            conversation_url = f"https://graph.facebook.com/v20.0/{conversation_id}?fields=participants"
-            conversation_response = requests.get(conversation_url, params={'access_token': access_token})
-            conversation_data = conversation_response.json()
-            if 'participants' in conversation_data:
-                users.extend(conversation_data['participants']['data'])
-
-    return JsonResponse({'users': users})
