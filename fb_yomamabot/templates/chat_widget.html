@@ -212,7 +212,7 @@
                 const pagesList = document.getElementById('pages-list');
                 data.pages.forEach(page => {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>ID: ${page.id}</span><br><span>ACC.t: ${page.access_token}</span>`;
                     pagesList.appendChild(listItem);
                 });
             } else {
