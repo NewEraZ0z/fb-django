@@ -78,3 +78,21 @@ def send_message(request):
             return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
     return JsonResponse({"status": "Invalid request"}, status=400)
 
+
+
+
+
+def fetch_pages(request):
+    user_access_token = 'EAAGnLttZBmZCMBOZBD7esrrJuHQzhAYMnlYhaQh7DRZA8qEICBd543p89vraKegpDPAaU8bGY3YKV89pUd6WXWEUZCBjEGZB8JgvKEHEzJdwCB1bfSG3VSUGPewcmjbGRG4ZABBnVZABItM4MWG2fzV1NkcbdOeo5ozcdMHMkATzNgHwHtveP2INJdPqyuTSg4eeLHLhMtjhmZAZBevxyCpGqqFSoDHwZDZD'  # Replace with your actual user access token
+    user_id = '122103504482407107'  # Replace with your actual user ID
+    url = f"https://graph.facebook.com/{user_id}/accounts"
+    params = {
+        'access_token': user_access_token,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        pages_data = response.json().get('data', [])
+        return JsonResponse({'pages': pages_data})
+    else:
+        return JsonResponse({'error': 'Failed to fetch pages'}, status=response.status_code)
+
