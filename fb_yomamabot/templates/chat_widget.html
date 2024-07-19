@@ -99,57 +99,24 @@
 }
 
 #left-panel {
-    width: 300px;
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
+    width: 250px;
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
+    border-right: 1px solid #ccc;
 }
-
 
 #left-panel h3 {
     margin-top: 0;
-    font-size: 1.5em;
-    color: #333;
-    text-align: center;
 }
 
 #pages-list {
     list-style-type: none;
     padding: 0;
-    margin: 0;
 }
 
 #pages-list li {
-    padding: 15px 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s ease;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
 }
-
-#pages-list li:hover {
-    background-color: #eaeaea;
-}
-
-#pages-list li span {
-    font-size: 0.9em;
-    color: #666;
-}
-
-#chat-container {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    background-color: #fff;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 //**** users listes ****
 
     </style>
@@ -157,12 +124,10 @@
 <body>
     <div id="dashboard">
         
-    <div id="left-panel">
-        <h3>Pages</h3>
-        <ul id="pages-list" class="pages-list">
-            
-        </ul>
-    </div>
+   <div id="left-panel">
+    <h3>Pages</h3>
+    <ul id="pages-list"></ul>
+     </div>
         
     <div class="chat-container">
         <div class="chat-header">
@@ -182,7 +147,7 @@
     <script>
 
         //*********left panel
-
+        
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/fetch_pages/')
         .then(response => response.json())
@@ -191,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const pagesList = document.getElementById('pages-list');
                 data.pages.forEach(page => {
                     const listItem = document.createElement('li');
-                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+                    listItem.textContent = `${page.name} (ID: ${page.id})`;
                     pagesList.appendChild(listItem);
                 });
             } else {
@@ -200,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error fetching pages:', error));
 });
+
         
 
 
