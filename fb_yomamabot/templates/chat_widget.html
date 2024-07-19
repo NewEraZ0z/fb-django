@@ -436,6 +436,22 @@ function loadUsers(pageId, accessToken) {
                     `;
                     userList.appendChild(userItem);
                 });
+
+               // Add event listener for user click
+                userList.addEventListener('click', function(event) {
+                    const userItem = event.target.closest('.user-item');
+                    if (userItem) {
+                        const conversationId = userItem.getAttribute('data-user-id');
+                        const pageAccessToken = userItem.getAttribute('data-access-token');
+                        console.log(`User clicked: ${conversationId}`);
+                        if (conversationId && pageAccessToken) {
+                            loadConversation(conversationId, pageAccessToken);
+                        } else {
+                            console.error('Conversation ID or Access Token missing');
+                        }
+                    }
+                });
+                
             } else {
                 userList.innerHTML = '<p>No users found.</p>';
             }
