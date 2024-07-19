@@ -47,23 +47,58 @@ class YoMamaBotView(View):
 def chat_widget(request):
     return render(request, 'chat_widget.html')
 
+# @csrf_exempt
+# def send_message(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         message = data.get('message')
+#         recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
+#         page_access_token = 'EAAGnLttZBmZCMBO7MdYNGz1ryniyTIX3ZChseN5zujxEmiZCMzWLh4aVNr7xbg9fozbXcPpRZAKNDOKAUwKZAHou75w4ajXkIGZCEvYrZBdlkxU1iIREZBWZBnI8kOgg5l8pn26psQmH8QbZC39PlmnSZAPivyCHpFrwMdHK18itc43zbCQcKpBxW654R62ar8seGffrTJkLd3MrDQZDZD'
+#         recipient_id = '7812277818885789'
+#         post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
+#         response_msg = {
+#             "recipient": {"id": recipient_id},
+#             "messaging_type": "RESPONSE",  # Or "UPDATE" based on your use case
+#             "message": {"text": message}
+#         }
+
+#         response = requests.post(post_message_url, 
+#                                  params={"access_token": page_access_token},
+#                                  headers={"Content-Type": "application/json"},
+#                                  data=json.dumps(response_msg))
+#         response_data = response.json()
+
+#         # Log the response for debugging
+#         print(f"Response Status Code: {response.status_code}")
+#         print(f"Response Data: {response_data}")
+
+#         if response.status_code == 200:
+#             return JsonResponse({"status": "Message sent!"})
+#         else:
+#             return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
+#     return JsonResponse({"status": "Invalid request"}, status=400)
+
+#   send message 
 @csrf_exempt
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         message = data.get('message')
-        recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
-        page_access_token = 'EAAGnLttZBmZCMBO7MdYNGz1ryniyTIX3ZChseN5zujxEmiZCMzWLh4aVNr7xbg9fozbXcPpRZAKNDOKAUwKZAHou75w4ajXkIGZCEvYrZBdlkxU1iIREZBWZBnI8kOgg5l8pn26psQmH8QbZC39PlmnSZAPivyCHpFrwMdHK18itc43zbCQcKpBxW654R62ar8seGffrTJkLd3MrDQZDZD'
-        recipient_id = '7812277818885789'
-        post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
+        recipient_id = data.get('recipient_id')
+        access_token = data.get('access_token')
+        
+        if not recipient_id or not access_token:
+            return JsonResponse({"status": "Error", "details": "Recipient ID or Access Token missing"}, status=400)
+        
+        post_message_url = 'https://graph.facebook.com/v20.0/me/messages'
         response_msg = {
             "recipient": {"id": recipient_id},
-            "messaging_type": "RESPONSE",  # Or "UPDATE" based on your use case
+            "messaging_type": "RESPONSE",
             "message": {"text": message}
         }
 
-        response = requests.post(post_message_url, 
-                                 params={"access_token": page_access_token},
+        response = requests.post(post_message_url,
+                                 params={"access_token": access_token},
                                  headers={"Content-Type": "application/json"},
                                  data=json.dumps(response_msg))
         response_data = response.json()
@@ -77,7 +112,6 @@ def send_message(request):
         else:
             return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
     return JsonResponse({"status": "Invalid request"}, status=400)
-
 
 
 
