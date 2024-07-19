@@ -92,94 +92,70 @@
             background-color: #005aa7;
         }
 
-/*  *** left panel ***  */
-.left-panel {
-    width: 300px;
+/*  *** dashboard and left panel ***  */
+#dashboard {
+    display: flex;
     height: 100vh;
-    background-color: #fff;
-    border-right: 1px solid #ddd;
+}
+
+#left-panel {
+    width: 300px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
 }
 
-.header {
-    padding: 20px;
-    background-color: #007bff;
-    color: #fff;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.header h2 {
-    margin: 0;
+#left-panel h3 {
+    margin-top: 0;
     font-size: 1.5em;
+    color: #333;
+    text-align: center;
 }
 
-.page-list {
-    padding: 20px;
+#pages-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-.page-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
+#pages-list li {
+    padding: 15px 10px;
+    margin-bottom: 10px;
     border-radius: 5px;
     background-color: #f9f9f9;
-    transition: background-color 0.3s;
-    cursor: pointer;
-}
-
-.page-item:hover {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.page-item img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 15px;
-}
-
-.page-details {
+    border: 1px solid #ddd;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
 }
 
-.page-details h3 {
-    margin: 0 0 5px;
-    font-size: 1.2em;
+#pages-list li:hover {
+    background-color: #eaeaea;
 }
 
-.page-details p {
-    margin: 0;
+#pages-list li span {
     font-size: 0.9em;
     color: #666;
 }
 
-.page-item:hover .page-details p {
-    color: #fff;
+#chat-container {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
     </style>
 </head>
 <body>
-    <div class="left-panel">
-        <div class="header">
-            <h2>Pages</h2>
-        </div>
-        <div class="page-list">
-            <div class="page-item">
-                <img src="page_logo_url" alt="Page Logo">
-                <div class="page-details">
-                    <h3>Page Name</h3>
-                    <p>Access Token: xxxxx</p>
-                </div>
-            </div>
-            <!-- More page items -->
-        </div>
+    <div id="left-panel">
+        <h3>Pages</h3>
+        <ul id="pages-list"></ul>
+    </div>
         
     <div class="chat-container">
         <div class="chat-header">
@@ -197,17 +173,24 @@
     <script>
 
         //*********left panel
-    document.addEventListener('DOMContentLoaded', function() {
-    const pageItems = document.querySelectorAll('.page-item');
-
-    pageItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const pageName = this.querySelector('h3').textContent;
-            alert(`Load details for ${pageName}`);
-            // You can replace the alert with actual logic to load page details
-        });
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/fetch_pages/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.pages) {
+                const pagesList = document.getElementById('pages-list');
+                data.pages.forEach(page => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+                    pagesList.appendChild(listItem);
+                });
+            } else {
+                console.error('Failed to fetch pages');
+            }
+        })
+        .catch(error => console.error('Error fetching pages:', error));
 });
+
 
      // ******chat_widget******
         const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
