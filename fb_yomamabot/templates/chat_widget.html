@@ -99,23 +99,54 @@
 }
 
 #left-panel {
-    width: 250px;
+    width: 300px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
     padding: 20px;
-    border-right: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
 }
 
 #left-panel h3 {
     margin-top: 0;
+    font-size: 1.5em;
+    color: #333;
+    text-align: center;
 }
 
 #pages-list {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 #pages-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+#pages-list li:hover {
+    background-color: #eaeaea;
+}
+
+#pages-list li span {
+    font-size: 0.9em;
+    color: #666;
+}
+
+#chat-widget {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 //**** users listes ****
 
@@ -124,10 +155,10 @@
 <body>
     <div id="dashboard">
         
-   <div id="left-panel">
-    <h3>Pages</h3>
-    <ul id="pages-list"></ul>
-     </div>
+    <div id="left-panel">
+        <h3>Pages</h3>
+        <ul id="pages-list"></ul>
+    </div>
         
     <div class="chat-container">
         <div class="chat-header">
@@ -147,8 +178,8 @@
     <script>
 
         //*********left panel
-        
-document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function() {
     fetch('/fetch_pages/')
         .then(response => response.json())
         .then(data => {
@@ -156,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const pagesList = document.getElementById('pages-list');
                 data.pages.forEach(page => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `${page.name} (ID: ${page.id})`;
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
                     pagesList.appendChild(listItem);
                 });
             } else {
@@ -165,6 +196,26 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error fetching pages:', error));
 });
+
+        
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetch('/fetch_pages/')
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.pages) {
+//                 const pagesList = document.getElementById('pages-list');
+//                 data.pages.forEach(page => {
+//                     const listItem = document.createElement('li');
+//                     listItem.textContent = `${page.name} (ID: ${page.id})`;
+//                     pagesList.appendChild(listItem);
+//                 });
+//             } else {
+//                 console.error('Failed to fetch pages');
+//             }
+//         })
+//         .catch(error => console.error('Error fetching pages:', error));
+// });
+        
 
         
 
