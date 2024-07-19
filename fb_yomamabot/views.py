@@ -83,7 +83,7 @@ def send_message(request):
 
 # load liste pages 
 def fetch_pages(request):
-    user_access_token = 'EAAGnLttZBmZCMBO75HZAB1hqwJOMXEJvOxlHsfHjbzD7ZC0BWt8wrzNKwL1SRrbQi4HKIKsF9dxxYUq3ZAntBRQsJZCWhf9IbuKpZBog42VmIKJZARSQ0N2QPawc1sPPdjO36n1BfaNXT4TODZBOlfgzKDC7S0I7du1XZA1Vd4ZCmuaMmtpSSdYGo7UakpNidwj01K95wcNnt2IW7MeOqLTckKilgQZAgQZDZD'  # Replace with your actual user access token
+    user_access_token = 'EAAGnLttZBmZCMBOxfurX9RRPSQMqTdQNzuvmY7wfG06ZBAu39UV9ZAGDEydfJZA9qiyQ9uwTgKDZBjqyzegS01mixtqRXZBkJlBZC3Ivsk5XHs7oLpzrGH5aZAqM4zStlBdePO4ZCL0MC1dbfpNPZC1MaNYaplG0OqYGt4CLfZBxNHaOUVNYFNPad2HUzYOMNG5L3yBnyI4p5GMTqLNgHhcLGKiJNTcneBEZD'  # Replace with your actual user access token
     user_id = '122103504482407107'  # Replace with your actual user ID
     url = f"https://graph.facebook.com/{user_id}/accounts"
     params = {
