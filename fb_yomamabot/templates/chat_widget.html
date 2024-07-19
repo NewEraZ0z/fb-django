@@ -107,14 +107,6 @@
     overflow-y: auto;
 }
 
-#right-panel {
-    width: 300px;
-    background-color: #ffffff;
-    border-right: 1px solid #e0e0e0;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-}
 
 #left-panel h3 {
     margin-top: 0;
@@ -158,10 +150,7 @@
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
         
-#user-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
+
     </style>
 </head>
 <body>
@@ -170,11 +159,6 @@
     <div id="left-panel">
         <h3>Pages</h3>
         <ul id="pages-list"></ul>
-    </div>
-
-     <div id="right-panel">
-        <h3>Users</h3>
-        <ul id="user-list"></ul>
     </div>
         
     <div class="chat-container">
@@ -214,36 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
         // **** load users list ***
-
-        
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('pages-list').addEventListener('click', function(event) {
-        if (event.target.tagName === 'LI') {
-            const pageId = event.target.getAttribute('data-page-id');
-            fetch(`/get_conversations/${pageId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.data) {
-                        displayUsers(data.data);
-                    } else {
-                        console.error('Failed to fetch conversations');
-                    }
-                })
-                .catch(error => console.error('Error fetching conversations:', error));
-        }
-    });
-});
-
-function displayUsers(conversations) {
-    const userList = document.getElementById('user-list');
-    userList.innerHTML = '';
-    conversations.forEach(conversation => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `User ID: ${conversation.id} - Last Updated: ${new Date(conversation.updated_time * 1000).toLocaleString()}`;
-        userList.appendChild(listItem);
-    });
-}
-
 
      // ******chat_widget******
         const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
