@@ -417,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadUsers(pageId, accessToken) {
+    console.log(`Loading users for page ID: ${pageId}`);
     fetch(`/fetch_users/?page_id=${pageId}&access_token=${accessToken}`)
         .then(response => response.json())
         .then(data => {
@@ -431,13 +432,14 @@ function loadUsers(pageId, accessToken) {
                 data.users.forEach(user => {
                     const userItem = document.createElement('div');
                     userItem.className = 'user-item';
-                    userItem.innerHTML = `
-                        <strong>${user.name}</strong> <span>(ID: ${user.id})</span>
-                    `;
+                    userItem.setAttribute('data-user-id', user.id);
+                    userItem.setAttribute('data-page-id', pageId);
+                    userItem.setAttribute('data-access-token', accessToken);
+                    userItem.innerHTML = `<strong>${user.name}</strong> <span>(ID: ${user.id})</span>`;
                     userList.appendChild(userItem);
                 });
 
-                 // Add event listener for user click
+                // Add event listener for user click
                 userList.addEventListener('click', function(event) {
                     const userItem = event.target.closest('.user-item');
                     if (userItem) {
@@ -451,7 +453,6 @@ function loadUsers(pageId, accessToken) {
                         }
                     }
                 });
-                
             } else {
                 userList.innerHTML = '<p>No users found.</p>';
             }
