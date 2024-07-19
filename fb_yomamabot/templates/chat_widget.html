@@ -93,33 +93,94 @@
         }
 
 /*  *** left panel ***  */
- #left-panel {
-    width: 250px;
+.left-panel {
+    width: 300px;
+    height: 100vh;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.header {
     padding: 20px;
-    border-right: 1px solid #ccc;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-#left-panel h3 {
-    margin-top: 0;
+.header h2 {
+    margin: 0;
+    font-size: 1.5em;
 }
 
-#pages-list {
-    list-style-type: none;
-    padding: 0;
+.page-list {
+    padding: 20px;
 }
 
-#pages-list li {
+.page-item {
+    display: flex;
+    align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+
+.page-item:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.page-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.page-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-details h3 {
+    margin: 0 0 5px;
+    font-size: 1.2em;
+}
+
+.page-details p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.page-item:hover .page-details p {
+    color: #fff;
 }
 
     </style>
 </head>
 <body>
-    <div id="left-panel">
-    <h3>Pages</h3>
-    <ul id="pages-list"></ul>
-    </div>
+    <div class="left-panel">
+        <div class="header">
+            <h2>Pages</h2>
+        </div>
+        <div class="page-list">
+            <div class="page-item">
+                <img src="page_logo_url" alt="Page Logo">
+                <div class="page-details">
+                    <h3>Page Name</h3>
+                    <p>Access Token: xxxxx</p>
+                </div>
+            </div>
+            <!-- More page items -->
+        </div>
+        
     <div class="chat-container">
         <div class="chat-header">
             <h1>Chat Widget</h1>
@@ -136,24 +197,17 @@
     <script>
 
         //*********left panel
-       document.addEventListener('DOMContentLoaded', function() {
-    fetch('/fetch_pages/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.pages) {
-                const pagesList = document.getElementById('pages-list');
-                data.pages.forEach(page => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${page.name} (ID: ${page.id})`;
-                    pagesList.appendChild(listItem);
-                });
-            } else {
-                console.error('Failed to fetch pages');
-            }
-        })
-        .catch(error => console.error('Error fetching pages:', error));
-});
+    document.addEventListener('DOMContentLoaded', function() {
+    const pageItems = document.querySelectorAll('.page-item');
 
+    pageItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const pageName = this.querySelector('h3').textContent;
+            alert(`Load details for ${pageName}`);
+            // You can replace the alert with actual logic to load page details
+        });
+    });
+});
 
      // ******chat_widget******
         const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
