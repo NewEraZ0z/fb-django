@@ -4,9 +4,6 @@ from .views import YoMamaBotView, chat_widget, send_message, fetch_pages
 
 
 
-   
-
-
 urlpatterns = [
     path('webhook', YoMamaBotView.as_view(), name='webhook'),
     path('chat_widget', chat_widget, name='chat_widget'),
