@@ -172,7 +172,9 @@
         
     <div id="left-panel">
         <h3>Pages</h3>
-        <ul id="pages-list"></ul>
+        <ul id="pages-list" class="pages-list">
+            
+        </ul>
     </div>
 
         <div id="user-list" class="user-list">
@@ -205,6 +207,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const pagesList = document.getElementById('pages-list');
                 data.pages.forEach(page => {
                     const listItem = document.createElement('li');
+                    listItem.className = 'page-item';
+                    listItem.setAttribute('data-page-id', page.id);
+                    listItem.setAttribute('data-access-token', page.access_token);
                     listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
                     pagesList.appendChild(listItem);
                 });
@@ -214,6 +219,25 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error fetching pages:', error));
 });
+
+        
+// document.addEventListener('DOMContentLoaded', function() {
+//     fetch('/fetch_pages/')
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.pages) {
+//                 const pagesList = document.getElementById('pages-list');
+//                 data.pages.forEach(page => {
+//                     const listItem = document.createElement('li');
+//                     listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+//                     pagesList.appendChild(listItem);
+//                 });
+//             } else {
+//                 console.error('Failed to fetch pages');
+//             }
+//         })
+//         .catch(error => console.error('Error fetching pages:', error));
+// });
         
 // load users 
 
