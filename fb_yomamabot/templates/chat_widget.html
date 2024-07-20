@@ -362,7 +362,6 @@ ul {
         </div>
         <div class="message-input">
             <input type="text" id="message" placeholder="Type your message here...">
-            <input type="hidden" id="data-conversation-id" value="">
             <input type="hidden" id="data-access-token" value="">
             <input type="hidden" id="data-recipient-id" value="">
             <button onclick="sendMessage()">Send</button>
@@ -452,6 +451,10 @@ function loadConversation(conversationId, accessToken) {
         .then(response => response.json())
         .then(data => {
             const chatMessages = document.getElementById('chat-messages');
+            if (!chatMessages) {
+                console.error('Element with ID chat-messages not found');
+                return;
+            }
             chatMessages.innerHTML = ''; // Clear existing messages
 
             if (data.messages) {
@@ -461,16 +464,13 @@ function loadConversation(conversationId, accessToken) {
                         .then(response => response.json())
                         .then(messageDetails => {
                             const messageElement = document.createElement('div');
-                            const recipientId = document.getElementById('data-recipient-id').value;
-                            messageElement.className = messageDetails.from.id === recipientId ? 'message outgoing-message' : 'message incoming-message';
+                            const recipientId = messageDetails.to.data[0].id; // Extract recipient ID from 'to' field
+                            messageElement.className = recipientId === pageId ? 'message outgoing-message' : 'message incoming-message';
                             messageElement.innerHTML = `
                                 <p>${messageDetails.message}</p>
                                 <span>${new Date(messageDetails.created_time).toLocaleString()}</span>
                             `;
                             chatMessages.appendChild(messageElement);
-
-                            // Store the recipient ID in a hidden input for sending messages
-                            document.getElementById('data-recipient-id').value = messageDetails.to.data[0].id;
                         })
                         .catch(error => console.error('Error fetching message details:', error));
                 });
@@ -483,8 +483,8 @@ function loadConversation(conversationId, accessToken) {
 
 async function sendMessage() {
     const message = document.getElementById('message').value;
-    const recipientId = document.getElementById('data-recipient-id').value;
-    const accessToken = document.getElementById('data-access-token').value;
+    const recipientId = document.getElementById('data-recipient-id').value;  // Ensure this value is set correctly in the HTML
+    const accessToken = document.getElementById('data-access-token').value;  // Ensure this value is set correctly in the HTML
 
     if (!recipientId || !accessToken) {
         console.error('Recipient ID or Access Token is missing');
@@ -495,7 +495,7 @@ async function sendMessage() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': '{{ csrf_token }}'  // Ensure you have CSRF token handling set up
+            'X-CSRFToken': '{{ csrf_token }}'
         },
         body: JSON.stringify({
             message: message,
@@ -506,10 +506,10 @@ async function sendMessage() {
 
     const result = await response.json();
 
-    if (response.ok) {
-        // Clear input after sending message
-        document.getElementById('message').value = '';
+    // Clear input after sending message
+    document.getElementById('message').value = '';
 
+    if (result.status === 'Message sent!') {
         // Display outgoing message in chat window
         displayMessage(message, 'outgoing');
     } else {
