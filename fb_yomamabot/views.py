@@ -90,7 +90,6 @@ def send_message(request):
     return JsonResponse({"status": "Invalid request"}, status=400)
 
 
-
 # load liste pages 
 def fetch_pages(request):
     user_access_token = 'EAAGnLttZBmZCMBO1zYqPoyMUopGrfQ6XITPj7OwkO3v3GwTwFIRI0v90XHfmrZC8ckSzCTmlwcddvZAPVaNzCVHx9KgvM79HtmViSZB9ZAjrnqyFg84gd2zt4KcptPZB1ZArejnbJYCdkr98Jcp2UvPsZAXLNIerbjQgzTdcZCLFZBjW9TUNcIoDxzS4qIkqLQ8l21QFVkecbOjk8MmeYU6sZBLaQfBy3gZDZD'  # Replace with your actual user access token
