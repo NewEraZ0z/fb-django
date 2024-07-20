@@ -47,22 +47,26 @@ class YoMamaBotView(View):
 def chat_widget(request):
     return render(request, 'chat_widget.html')
 
+# Send message
 @csrf_exempt
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         message = data.get('message')
-        recipient_id = data.get('recipient_id')  # Assuming recipient ID is sent in the request body
-        page_access_token = 'page_access_toekn'
-        recipient_id = 'recipient_id'
+        recipient_id = data.get('recipient_id')
+        page_access_token = data.get('access_token')  # Get the access token from the request
+
+        if not recipient_id or not page_access_token:
+            return JsonResponse({"status": "Error", "details": "Recipient ID or Access Token missing"}, status=400)
+
         post_message_url = f'https://graph.facebook.com/v20.0/me/messages'
         response_msg = {
             "recipient": {"id": recipient_id},
-            "messaging_type": "RESPONSE",  # Or "UPDATE" based on your use case
+            "messaging_type": "RESPONSE",
             "message": {"text": message}
         }
 
-        response = requests.post(post_message_url, 
+        response = requests.post(post_message_url,
                                  params={"access_token": page_access_token},
                                  headers={"Content-Type": "application/json"},
                                  data=json.dumps(response_msg))
@@ -77,6 +81,7 @@ def send_message(request):
         else:
             return JsonResponse({"status": "Error", "details": response_data}, status=response.status_code)
     return JsonResponse({"status": "Invalid request"}, status=400)
+
 
 
 
