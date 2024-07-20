@@ -1,0 +1,696 @@
+<!-- # templates/chat_widget.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Widget</title>
+    <style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    gap: 10px;
+    padding: 20px;
+}
+
+.panel {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel.left {
+    max-width: 300px;
+}
+
+.panel.right {
+    max-width: 300px;
+}
+
+h2, h3 {
+    margin-top: 0;
+    font-size: 24px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.page-item:hover {
+    background-color: #f0f0f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.page-item strong {
+    font-size: 16px;
+}
+
+.page-item span {
+    font-size: 14px;
+    color: #666;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.user-item:hover {
+    background-color: #f0f0f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-item strong {
+    font-size: 16px;
+}
+
+.user-item span {
+    font-size: 14px;
+    color: #666;
+}
+
+.chat-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.message-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+}
+
+.message-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.message-input button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.message-input button:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+}
+
+.incoming-message {
+    background-color: rgba(255, 165, 0, 0.3);
+    text-align: left;
+}
+
+.outgoing-message {
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: right;
+}
+
+
+        
+/*         body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #4267b2;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            clear: both; /* Clear floating to prevent overlapping messages */
+        }
+
+        .incoming-message {
+            background-color: rgba(255, 165, 0, 0.3); /* Orange color with 30% opacity */
+            text-align: left;
+        }
+
+        .outgoing-message {
+            background-color: #0084ff; /* Blue for outgoing messages */
+            color: #fff;
+            text-align: right;
+        }
+
+        .message-text {
+            display: inline-block; /* Ensure text wraps correctly */
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .message-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .message-input input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .message-input button {
+            background-color: #0084ff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .message-input button:hover {
+            background-color: #005aa7;
+        }
+
+/*  *** dashboard and left panel ***  */
+#dashboard {
+    display: flex;
+    height: 100vh;
+}
+
+#left-panel {
+    width: 300px;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+#left-panel h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #333;
+    text-align: center;
+}
+
+#pages-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#pages-list li {
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+#pages-list li:hover {
+    background-color: #eaeaea;
+}
+
+#pages-list li span {
+    font-size: 0.9em;
+    color: #666;
+}
+
+#chat-widget {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+//**** users listes ****
+.user-list {
+    padding: 10px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-item strong {
+    display: block;
+}
+
+ */
+    </style>
+</head>
+<body>
+   <div id="dashboard" class="container">
+       
+     <div id="left-panel" class="panel left">
+        <h3>Pages</h3>
+        <ul id="pages-list"></ul>
+    </div>
+
+<!--    <div id="user-list" class="user-list"> -->
+    <div id="user-list" class="panel right">
+            <h3>Users</h3>
+         <!-- List of users will be displayed here -->
+     </div>
+        
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Chat Widget</h1>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <!-- Messages will be displayed here -->
+        </div>
+        <div class="message-input">
+            <input type="text" id="message" placeholder="Type your message here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+        
+    </div>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/fetch_pages/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.pages) {
+                const pagesList = document.getElementById('pages-list');
+                data.pages.forEach(page => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'page-item';
+                    listItem.setAttribute('data-page-id', page.id);
+                    listItem.setAttribute('data-access-token', page.access_token);
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+                    pagesList.appendChild(listItem);
+                });
+            } else {
+                console.error('Failed to fetch pages');
+            }
+        })
+        .catch(error => console.error('Error fetching pages:', error));
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const pagesList = document.getElementById('pages-list');
+    if (!pagesList) {
+        console.error('Element with ID pages-list not found');
+        return;
+    }
+
+    pagesList.addEventListener('click', function(event) {
+        const listItem = event.target.closest('.page-item');
+        if (listItem) {
+            const pageId = listItem.getAttribute('data-page-id');
+            const accessToken = listItem.getAttribute('data-access-token');
+            console.log(`Page clicked: ${pageId}, Access Token: ${accessToken}`);
+            if (pageId && accessToken) {
+                loadUsers(pageId, accessToken);
+            } else {
+                console.error('Page ID or Access Token missing');
+            }
+        }
+    });
+});
+
+function loadUsers(pageId, accessToken) {
+    console.log(`Loading users for page ID: ${pageId}`);
+    fetch(`https://graph.facebook.com/v20.0/${pageId}/conversations?access_token=${accessToken}`)
+        .then(response => response.json())
+        .then(data => {
+            const userList = document.getElementById('user-list');
+            if (!userList) {
+                console.error('Element with ID user-list not found');
+                return;
+            }
+            userList.innerHTML = ''; // Clear existing content
+
+            if (data.data) {
+                data.data.forEach(conversation => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.setAttribute('data-conversation-id', conversation.id);
+                    userItem.setAttribute('data-access-token', accessToken);
+                    userItem.innerHTML = `<strong>Conversation ID: ${conversation.id}</strong> <span>Last Updated: ${new Date(conversation.updated_time).toLocaleString()}</span>`;
+                    userList.appendChild(userItem);
+                });
+
+                // Add event listener for user click
+                userList.addEventListener('click', function(event) {
+                    const userItem = event.target.closest('.user-item');
+                    if (userItem) {
+                        const conversationId = userItem.getAttribute('data-conversation-id');
+                        const pageAccessToken = userItem.getAttribute('data-access-token');
+                        console.log(`User clicked: ${conversationId}, Access Token: ${pageAccessToken}`);
+                        if (conversationId && pageAccessToken) {
+                            loadConversation(conversationId, pageAccessToken);
+                        } else {
+                            console.error('Conversation ID or Access Token missing');
+                        }
+                    }
+                });
+            } else {
+                userList.innerHTML = '<p>No users found.</p>';
+            }
+        })
+        .catch(error => console.error('Error fetching users:', error));
+}
+
+function loadConversation(conversationId, accessToken) {
+    console.log(`Loading conversation ID: ${conversationId}`);
+    fetch(`https://graph.facebook.com/v20.0/${conversationId}?fields=messages&access_token=${accessToken}`)
+        .then(response => response.json())
+        .then(data => {
+            const chatMessages = document.getElementById('chat-messages');
+            if (!chatMessages) {
+                console.error('Element with ID chat-messages not found');
+                return;
+            }
+            chatMessages.innerHTML = ''; // Clear existing messages
+
+            if (data.messages) {
+                console.log(`Messages found: ${data.messages.data.length}`);
+                data.messages.data.forEach(messageData => {
+                    const messageId = messageData.id;
+                    fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
+                        .then(response => response.json())
+                        .then(messageDetails => {
+                            console.log(`Message details: ${JSON.stringify(messageDetails)}`);
+                            const messageElement = document.createElement('div');
+                            messageElement.className = messageDetails.from.id === conversationId ? 'message outgoing-message' : 'message incoming-message';
+                            messageElement.innerHTML = `
+                                <p>${messageDetails.message}</p>
+                                <span>${new Date(messageDetails.created_time).toLocaleString()}</span>
+                            `;
+                            chatMessages.appendChild(messageElement);
+                        })
+                        .catch(error => console.error('Error fetching message details:', error));
+                });
+            } else {
+                chatMessages.innerHTML = '<p>No messages found.</p>';
+            }
+        })
+        .catch(error => console.error('Error fetching conversation:', error));
+}
+
+
+
+        
+//         //*********left panel
+
+//    document.addEventListener('DOMContentLoaded', function() {
+//     fetch('/fetch_pages/')
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.pages) {
+//                 const pagesList = document.getElementById('pages-list');
+//                 data.pages.forEach(page => {
+//                     const listItem = document.createElement('li');
+//                     listItem.className = 'page-item';
+//                     listItem.setAttribute('data-page-id', page.id);
+//                     listItem.setAttribute('data-access-token', page.access_token);
+//                     listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span><br><span>${page.access_token}</span>`;
+//                     pagesList.appendChild(listItem);
+//                 });
+//             } else {
+//                 console.error('Failed to fetch pages');
+//             }
+//         })
+//         .catch(error => console.error('Error fetching pages:', error));
+// });
+
+        
+// // **** fatch users lste 
+// document.addEventListener('DOMContentLoaded', function() {
+//     const pagesList = document.getElementById('pages-list');
+//     if (!pagesList) {
+//         console.error('Element with ID pages-list not found');
+//         return;
+//     }
+
+//     pagesList.addEventListener('click', function(event) {
+//         const listItem = event.target.closest('.page-item');
+//         if (listItem) {
+//             const pageId = listItem.getAttribute('data-page-id');
+//             const accessToken = listItem.getAttribute('data-access-token');
+//             if (pageId && accessToken) {
+//                 loadUsers(pageId, accessToken);
+//             } else {
+//                 console.error('Page ID or Access Token missing');
+//             }
+//         }
+//     });
+// });
+
+// function loadUsers(pageId, accessToken) {
+//     console.log(`Loading users for page ID: ${pageId}`);
+//     fetch(`/fetch_users/?page_id=${pageId}&access_token=${accessToken}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             const userList = document.getElementById('user-list');
+//             if (!userList) {
+//                 console.error('Element with ID user-list not found');
+//                 return;
+//             }
+//             userList.innerHTML = ''; // Clear existing content
+
+//             if (data.users) {
+//                 data.users.forEach(user => {
+//                     const userItem = document.createElement('div');
+//                     userItem.className = 'user-item';
+//                     userItem.setAttribute('data-user-id', user.id);
+//                     userItem.setAttribute('data-page-id', pageId);
+//                     userItem.setAttribute('data-access-token', accessToken);
+//                     userItem.innerHTML = `<strong>${user.name}</strong> <span>(ID: ${user.id})</span>`;
+//                     userList.appendChild(userItem);
+//                 });
+
+//                 // Add event listener for user click
+//                 userList.addEventListener('click', function(event) {
+//                     const userItem = event.target.closest('.user-item');
+//                     if (userItem) {
+//                         const conversationId = userItem.getAttribute('data-user-id');
+//                         const pageAccessToken = userItem.getAttribute('data-access-token');
+//                         console.log(`User clicked: ${conversationId}, Access Token: ${pageAccessToken}`);
+//                         if (conversationId && pageAccessToken) {
+//                             loadConversation(conversationId, pageAccessToken);
+//                         } else {
+//                             console.error('Conversation ID or Access Token missing');
+//                         }
+//                     }
+//                 });
+//             } else {
+//                 userList.innerHTML = '<p>No users found.</p>';
+//             }
+//         })
+//         .catch(error => console.error('Error fetching users:', error));
+// }
+
+//      // ******chat_widget******
+//         const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
+
+//         chatSocket.onmessage = function(e) {
+//             const data = JSON.parse(e.data);
+//             displayMessage(data.message, 'incoming');
+//         };
+
+//         chatSocket.onclose = function(e) {
+//             console.error('Chat socket closed unexpectedly');
+//         };
+
+//         const messageInput = document.getElementById('message');
+//         if (messageInput) {
+//             messageInput.addEventListener('keypress', function (e) {
+//                 if (e.key === 'Enter') {
+//                     sendMessage();
+//                 }
+//             });
+//         }
+        
+//     // *** load conversation On widget 
+   
+// function loadConversation(conversationId, accessToken) {
+//     console.log(`Loading conversation ID: ${conversationId}`);
+//     fetch(`https://graph.facebook.com/v20.0/${conversationId}?fields=messages&access_token=${accessToken}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             const chatMessages = document.getElementById('chat-messages');
+//             if (!chatMessages) {
+//                 console.error('Element with ID chat-messages not found');
+//                 return;
+//             }
+//             chatMessages.innerHTML = ''; // Clear existing messages
+
+//             if (data.messages) {
+//                 console.log(`Messages found: ${data.messages.data.length}`);
+//                 data.messages.data.forEach(messageData => {
+//                     const messageId = messageData.id;
+//                     fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
+//                         .then(response => response.json())
+//                         .then(messageDetails => {
+//                             console.log(`Message details: ${JSON.stringify(messageDetails)}`);
+//                             const messageElement = document.createElement('div');
+//                             messageElement.className = messageDetails.from.id === conversationId ? 'message outgoing-message' : 'message incoming-message';
+//                             messageElement.innerHTML = `
+//                                 <p>${messageDetails.message}</p>
+//                                 <span>${new Date(messageDetails.created_time).toLocaleString()}</span>
+//                             `;
+//                             chatMessages.appendChild(messageElement);
+//                         })
+//                         .catch(error => console.error('Error fetching message details:', error));
+//                 });
+//             } else {
+//                 chatMessages.innerHTML = '<p>No messages found.</p>';
+//             }
+//         })
+//         .catch(error => console.error('Error fetching conversation:', error));
+// }
+
+    //*** end ***
+        async function sendMessage() {
+            const message = document.getElementById('message').value;
+            const response = await fetch('/send_message/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({message: message})
+            });
+            const result = await response.json();
+
+            // Clear input after sending message
+            document.getElementById('message').value = '';
+
+            // Display outgoing message in chat window
+            displayMessage(message, 'outgoing');
+        }
+
+    
+        
+        function displayMessage(text, type) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message ' + (type === 'incoming' ? 'incoming-message' : 'outgoing-message');
+
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = text;
+
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = new Date().toLocaleTimeString();
+
+            messageElement.appendChild(messageText);
+            messageElement.appendChild(messageTime);
+
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+    </script>
+</body>
+</html>
+
+
+
