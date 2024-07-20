@@ -416,6 +416,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
+
 function loadUsers(pageId, accessToken) {
     fetch(`https://graph.facebook.com/v20.0/${pageId}/conversations?access_token=${accessToken}`)
         .then(response => response.json())
@@ -459,7 +461,8 @@ function loadConversation(conversationId, accessToken) {
                         .then(response => response.json())
                         .then(messageDetails => {
                             const messageElement = document.createElement('div');
-                            messageElement.className = messageDetails.from.id === pageId ? 'message outgoing-message' : 'message incoming-message';
+                            const recipientId = document.getElementById('data-recipient-id').value;
+                            messageElement.className = messageDetails.from.id === recipientId ? 'message outgoing-message' : 'message incoming-message';
                             messageElement.innerHTML = `
                                 <p>${messageDetails.message}</p>
                                 <span>${new Date(messageDetails.created_time).toLocaleString()}</span>
@@ -522,7 +525,6 @@ function displayMessage(message, type) {
     chatMessages.appendChild(messageElement);
 }
 
-        
     </script>
 </body>
 </html>
