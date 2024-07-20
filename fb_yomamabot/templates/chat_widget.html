@@ -370,6 +370,26 @@ ul {
 
     <script>
 
+   const chatSocket = new WebSocket('wss://' + window.location.host + '/ws/chat/');
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            displayMessage(data.message, 'incoming');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        const messageInput = document.getElementById('message');
+        if (messageInput) {
+            messageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/fetch_pages/')
         .then(response => response.json())
