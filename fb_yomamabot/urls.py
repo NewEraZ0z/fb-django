@@ -1,6 +1,6 @@
 # yomamabot/fb_yomamabot/urls.py
 from django.urls import path
-from .views import YoMamaBotView, InstagHook, chat_widget, send_message, fetch_pages, fetch_users
+from .views import YoMamaBotView, chat_widget, send_message, fetch_pages, fetch_users
 
 InstagHook(View)
 
