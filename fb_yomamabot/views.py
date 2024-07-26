@@ -22,14 +22,6 @@ class YoMamaBotView(View):
         else:
             return HttpResponse('Error, invalid token', status=403)
 
-class InstagHook(View):
-    def get(self, request, *args, **kwargs):
-        hub_verify_token = request.GET.get('hub.verify_token')
-        hub_challenge = request.GET.get('hub.challenge')
-        if hub_verify_token == '66998874547781455':
-            return HttpResponse(hub_challenge, status=200)
-        else:
-            return HttpResponse('Error, invalid token', status=403)
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
