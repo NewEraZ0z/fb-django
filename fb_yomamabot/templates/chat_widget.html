@@ -369,7 +369,24 @@ ul {
     </div>
 
     <script>
+ const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/'
+    );
 
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.classList.add(data.message_type);
+        messageElement.innerText = data.message;
+        document.getElementById('chat-messages').appendChild(messageElement);
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+        
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/fetch_pages/')
         .then(response => response.json())
@@ -549,7 +566,12 @@ function loadConversation(conversationId, accessToken) {
             chatMessages.appendChild(messageElement);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        
+
+         function sendMessageOnEnter(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
     </script>
 </body>
 </html>
