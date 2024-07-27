@@ -54,7 +54,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 
 
-
 # # # yomamabot/fb_yomamabot/consumers.py
 
 # # fb_yomamabot/consumers.py
