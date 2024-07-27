@@ -369,111 +369,112 @@ ul {
     </div>
 
     <script>
-    let activeRecipientId = null;
-    let messages = [];  // Store messages here
-
-    const chatSocket = new WebSocket(
+ 
+ const chatSocket = new WebSocket(
         'wss://' + window.location.host + '/ws/chat/'
     );
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        if (data.recipient_id === activeRecipientId) {
-            displayMessage(data.message, data.message_type);
-        }
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.classList.add(data.message_type);
+        messageElement.innerText = data.message;
+        document.getElementById('chat-messages').appendChild(messageElement);
     };
 
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('/fetch_pages/')
-            .then(response => response.json())
-            .then(data => {
-                if (data.pages) {
-                    const pagesList = document.getElementById('pages-list');
-                    data.pages.forEach(page => {
-                        const listItem = document.createElement('li');
-                        listItem.className = 'page-item';
-                        listItem.setAttribute('data-page-id', page.id);
-                        listItem.setAttribute('data-access-token', page.access_token);
-                        listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
-                        pagesList.appendChild(listItem);
-                    });
-                } else {
-                    console.error('Failed to fetch pages');
-                }
-            })
-            .catch(error => console.error('Error fetching pages:', error));
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const pagesList = document.getElementById('pages-list');
-        if (!pagesList) {
-            console.error('Element with ID pages-list not found');
-            return;
-        }
-
-        pagesList.addEventListener('click', function(event) {
-            const listItem = event.target.closest('.page-item');
-            if (listItem) {
-                const pageId = listItem.getAttribute('data-page-id');
-                const accessToken = listItem.getAttribute('data-access-token');
-                console.log(`Page clicked: ${pageId}, Access Token: ${accessToken}`);
-                if (pageId && accessToken) {
-                    loadUsers(pageId, accessToken);
-                } else {
-                    console.error('Page ID or Access Token missing');
-                }
+        
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/fetch_pages/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.pages) {
+                const pagesList = document.getElementById('pages-list');
+                data.pages.forEach(page => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'page-item';
+                    listItem.setAttribute('data-page-id', page.id);
+                    listItem.setAttribute('data-access-token', page.access_token);
+                    listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
+                    pagesList.appendChild(listItem);
+                });
+            } else {
+                console.error('Failed to fetch pages');
             }
-        });
-    });
+        })
+        .catch(error => console.error('Error fetching pages:', error));
+});
 
-    function loadUsers(pageId, accessToken) {
-        console.log(`Loading users for page ID: ${pageId}`);
-        fetch(`https://graph.facebook.com/v20.0/${pageId}/conversations?access_token=${accessToken}`)
-            .then(response => response.json())
-            .then(data => {
-                const userList = document.getElementById('user-list');
-                if (!userList) {
-                    console.error('Element with ID user-list not found');
-                    return;
-                }
-                userList.innerHTML = ''; // Clear existing content
-
-                if (data.data) {
-                    data.data.forEach(conversation => {
-                        const userItem = document.createElement('div');
-                        userItem.className = 'user-item';
-                        userItem.setAttribute('data-conversation-id', conversation.id);
-                        userItem.setAttribute('data-access-token', accessToken);
-                        userItem.innerHTML = `<strong>Conversation ID: ${conversation.id}</strong> <span>Last Updated: ${new Date(conversation.updated_time).toLocaleString()}</span>`;
-                        userList.appendChild(userItem);
-                    });
-
-                    // Add event listener for user click
-                    userList.addEventListener('click', function(event) {
-                        const userItem = event.target.closest('.user-item');
-                        if (userItem) {
-                            const conversationId = userItem.getAttribute('data-conversation-id');
-                            const pageAccessToken = userItem.getAttribute('data-access-token');
-                            console.log(`User clicked: ${conversationId}, Access Token: ${pageAccessToken}`);
-                            if (conversationId && pageAccessToken) {
-                                loadConversation(conversationId, pageAccessToken);
-                            } else {
-                                console.error('Conversation ID or Access Token missing');
-                            }
-                        }
-                    });
-                } else {
-                    userList.innerHTML = '<p>No users found.</p>';
-                }
-            })
-            .catch(error => console.error('Error fetching users:', error));
+document.addEventListener('DOMContentLoaded', function() {
+    const pagesList = document.getElementById('pages-list');
+    if (!pagesList) {
+        console.error('Element with ID pages-list not found');
+        return;
     }
 
-   function loadConversation(conversationId, accessToken) {
+    pagesList.addEventListener('click', function(event) {
+        const listItem = event.target.closest('.page-item');
+        if (listItem) {
+            const pageId = listItem.getAttribute('data-page-id');
+            const accessToken = listItem.getAttribute('data-access-token');
+            console.log(`Page clicked: ${pageId}, Access Token: ${accessToken}`);
+            if (pageId && accessToken) {
+                loadUsers(pageId, accessToken);
+            } else {
+                console.error('Page ID or Access Token missing');
+            }
+        }
+    });
+});
+
+function loadUsers(pageId, accessToken) {
+    console.log(`Loading users for page ID: ${pageId}`);
+    fetch(`https://graph.facebook.com/v20.0/${pageId}/conversations?access_token=${accessToken}`)
+        .then(response => response.json())
+        .then(data => {
+            const userList = document.getElementById('user-list');
+            if (!userList) {
+                console.error('Element with ID user-list not found');
+                return;
+            }
+            userList.innerHTML = ''; // Clear existing content
+
+            if (data.data) {
+                data.data.forEach(conversation => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.setAttribute('data-conversation-id', conversation.id);
+                    userItem.setAttribute('data-access-token', accessToken);
+                    userItem.innerHTML = `<strong>Conversation ID: ${conversation.id}</strong> <span>Last Updated: ${new Date(conversation.updated_time).toLocaleString()}</span>`;
+                    userList.appendChild(userItem);
+                });
+
+                // Add event listener for user click
+                userList.addEventListener('click', function(event) {
+                    const userItem = event.target.closest('.user-item');
+                    if (userItem) {
+                        const conversationId = userItem.getAttribute('data-conversation-id');
+                        const pageAccessToken = userItem.getAttribute('data-access-token');
+                        console.log(`User clicked: ${conversationId}, Access Token: ${pageAccessToken}`);
+                        if (conversationId && pageAccessToken) {
+                            loadConversation(conversationId, pageAccessToken);
+                        } else {
+                            console.error('Conversation ID or Access Token missing');
+                        }
+                    }
+                });
+            } else {
+                userList.innerHTML = '<p>No users found.</p>';
+            }
+        })
+        .catch(error => console.error('Error fetching users:', error));
+}
+
+function loadConversation(conversationId, accessToken) {
     console.log(`Loading conversation ID: ${conversationId}`);
     fetch(`https://graph.facebook.com/v20.0/${conversationId}?fields=messages&access_token=${accessToken}`)
         .then(response => response.json())
@@ -487,8 +488,6 @@ ul {
 
             if (data.messages) {
                 console.log(`Messages found: ${data.messages.data.length}`);
-                sortAndDisplayMessages(messages, accessToken);
-                
                 data.messages.data.forEach(messageData => {
                     const messageId = messageData.id;
                     fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
@@ -517,30 +516,9 @@ ul {
         .catch(error => console.error('Error fetching conversation:', error));
 }
 
+    //*** end ***
 
-    function sortAndDisplayMessages(messages, accessToken) {
-        messages.sort((a, b) => new Date(a.created_time) - new Date(b.created_time));
-        messages.forEach(messageData => {
-            const messageId = messageData.id;
-            fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
-                .then(response => response.json())
-                .then(messageDetails => {
-                    console.log(`Message details: ${JSON.stringify(messageDetails)}`);
-
-                    // Check if `from` exists in the message details
-                    if (messageDetails.from) {
-                        const recipientId = messageDetails.from.id;
-                        const messageType = messageDetails.from.id === window.currentRecipientId ? 'outgoing' : 'incoming';
-                        displayMessage(messageDetails.message, messageType);
-                    } else {
-                        console.error('Error: `from` field is missing in the message details.');
-                    }
-                })
-                .catch(error => console.error('Error fetching message details:', error));
-        });
-    }
-
-    const messageInput = document.getElementById('message');
+     const messageInput = document.getElementById('message');
         if (messageInput) {
             messageInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
@@ -550,263 +528,57 @@ ul {
         }
 
 
-    async function sendMessage() {
-        const message = document.getElementById('message').value;
-        const recipientId = window.currentRecipientId;
-        const accessToken = window.currentAccessToken;
+        
+       async function sendMessage() {
+    const message = document.getElementById('message').value;
+    const recipientId = window.currentRecipientId;
+    const accessToken = window.currentAccessToken;
 
-        if (!recipientId || !accessToken) {
-            console.error('Recipient ID or Access Token missing');
-            return;
-        }
-
-        const response = await fetch('/send_message/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ message: message, recipient_id: recipientId, access_token: accessToken })
-        });
-
-        const result = await response.json();
-
-        // Clear input after sending message
-        document.getElementById('message').value = '';
-
-        // Display outgoing message in chat window
-        displayMessage(message, 'outgoing');
+    if (!recipientId || !accessToken) {
+        console.error('Recipient ID or Access Token missing');
+        return;
     }
 
-    function displayMessage(text, type) {
-        const chatMessages = document.getElementById('chat-messages');
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message ' + (type === 'incoming' ? 'incoming' : 'outgoing');
+    const response = await fetch('/send_message/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ message: message, recipient_id: recipientId, access_token: accessToken })
+    });
 
-        const messageText = document.createElement('div');
-        messageText.className = 'message-text';
-        messageText.textContent = text;
+    const result = await response.json();
 
-        const messageTime = document.createElement('div');
-        messageTime.className = 'message-time';
-        messageTime.textContent = new Date().toLocaleTimeString();
+    // Clear input after sending message
+    document.getElementById('message').value = '';
 
-        messageElement.appendChild(messageText);
-        messageElement.appendChild(messageTime);
-
-        chatMessages.appendChild(messageElement);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-  
-//  const chatSocket = new WebSocket(
-//         'wss://' + window.location.host + '/ws/chat/'
-//     );
-
-//     chatSocket.onmessage = function(e) {
-//         const data = JSON.parse(e.data);
-//         const messageElement = document.createElement('div');
-//         messageElement.classList.add('message');
-//         messageElement.classList.add(data.message_type);
-//         messageElement.innerText = data.message;
-//         document.getElementById('chat-messages').appendChild(messageElement);
-//     };
-
-//     chatSocket.onclose = function(e) {
-//         console.error('Chat socket closed unexpectedly');
-//     };
-
-        
-// document.addEventListener('DOMContentLoaded', function() {
-//     fetch('/fetch_pages/')
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.pages) {
-//                 const pagesList = document.getElementById('pages-list');
-//                 data.pages.forEach(page => {
-//                     const listItem = document.createElement('li');
-//                     listItem.className = 'page-item';
-//                     listItem.setAttribute('data-page-id', page.id);
-//                     listItem.setAttribute('data-access-token', page.access_token);
-//                     listItem.innerHTML = `<strong>${page.name}</strong> <span>(ID: ${page.id})</span>`;
-//                     pagesList.appendChild(listItem);
-//                 });
-//             } else {
-//                 console.error('Failed to fetch pages');
-//             }
-//         })
-//         .catch(error => console.error('Error fetching pages:', error));
-// });
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const pagesList = document.getElementById('pages-list');
-//     if (!pagesList) {
-//         console.error('Element with ID pages-list not found');
-//         return;
-//     }
-
-//     pagesList.addEventListener('click', function(event) {
-//         const listItem = event.target.closest('.page-item');
-//         if (listItem) {
-//             const pageId = listItem.getAttribute('data-page-id');
-//             const accessToken = listItem.getAttribute('data-access-token');
-//             console.log(`Page clicked: ${pageId}, Access Token: ${accessToken}`);
-//             if (pageId && accessToken) {
-//                 loadUsers(pageId, accessToken);
-//             } else {
-//                 console.error('Page ID or Access Token missing');
-//             }
-//         }
-//     });
-// });
-
-// function loadUsers(pageId, accessToken) {
-//     console.log(`Loading users for page ID: ${pageId}`);
-//     fetch(`https://graph.facebook.com/v20.0/${pageId}/conversations?access_token=${accessToken}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             const userList = document.getElementById('user-list');
-//             if (!userList) {
-//                 console.error('Element with ID user-list not found');
-//                 return;
-//             }
-//             userList.innerHTML = ''; // Clear existing content
-
-//             if (data.data) {
-//                 data.data.forEach(conversation => {
-//                     const userItem = document.createElement('div');
-//                     userItem.className = 'user-item';
-//                     userItem.setAttribute('data-conversation-id', conversation.id);
-//                     userItem.setAttribute('data-access-token', accessToken);
-//                     userItem.innerHTML = `<strong>Conversation ID: ${conversation.id}</strong> <span>Last Updated: ${new Date(conversation.updated_time).toLocaleString()}</span>`;
-//                     userList.appendChild(userItem);
-//                 });
-
-//                 // Add event listener for user click
-//                 userList.addEventListener('click', function(event) {
-//                     const userItem = event.target.closest('.user-item');
-//                     if (userItem) {
-//                         const conversationId = userItem.getAttribute('data-conversation-id');
-//                         const pageAccessToken = userItem.getAttribute('data-access-token');
-//                         console.log(`User clicked: ${conversationId}, Access Token: ${pageAccessToken}`);
-//                         if (conversationId && pageAccessToken) {
-//                             loadConversation(conversationId, pageAccessToken);
-//                         } else {
-//                             console.error('Conversation ID or Access Token missing');
-//                         }
-//                     }
-//                 });
-//             } else {
-//                 userList.innerHTML = '<p>No users found.</p>';
-//             }
-//         })
-//         .catch(error => console.error('Error fetching users:', error));
-// }
-
-// function loadConversation(conversationId, accessToken) {
-//     console.log(`Loading conversation ID: ${conversationId}`);
-//     fetch(`https://graph.facebook.com/v20.0/${conversationId}?fields=messages&access_token=${accessToken}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             const chatMessages = document.getElementById('chat-messages');
-//             if (!chatMessages) {
-//                 console.error('Element with ID chat-messages not found');
-//                 return;
-//             }
-//             chatMessages.innerHTML = ''; // Clear existing messages
-
-//             if (data.messages) {
-//                 console.log(`Messages found: ${data.messages.data.length}`);
-//                 data.messages.data.forEach(messageData => {
-//                     const messageId = messageData.id;
-//                     fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
-//                         .then(response => response.json())
-//                         .then(messageDetails => {
-//                             console.log(`Message details: ${JSON.stringify(messageDetails)}`);
-//                             const recipientId = messageDetails.from.id; // Extract recipient ID
-//                             const messageElement = document.createElement('div');
-//                             messageElement.className = messageDetails.from.id === conversationId ? 'message outgoing-message' : 'message incoming-message';
-//                             messageElement.innerHTML = `
-//                                 <p>${messageDetails.message}</p>
-//                                 <span>${new Date(messageDetails.created_time).toLocaleString()}</span>
-//                             `;
-//                             chatMessages.appendChild(messageElement);
-
-//                             // Store recipient ID and access token for sending messages
-//                             window.currentRecipientId = recipientId;
-//                             window.currentAccessToken = accessToken;
-//                         })
-//                         .catch(error => console.error('Error fetching message details:', error));
-//                 });
-//             } else {
-//                 chatMessages.innerHTML = '<p>No messages found.</p>';
-//             }
-//         })
-//         .catch(error => console.error('Error fetching conversation:', error));
-// }
-
-//     //*** end ***
-
-//      const messageInput = document.getElementById('message');
-//         if (messageInput) {
-//             messageInput.addEventListener('keypress', function (e) {
-//                 if (e.key === 'Enter') {
-//                     sendMessage();
-//                 }
-//             });
-//         }
-
-
-        
-//        async function sendMessage() {
-//     const message = document.getElementById('message').value;
-//     const recipientId = window.currentRecipientId;
-//     const accessToken = window.currentAccessToken;
-
-//     if (!recipientId || !accessToken) {
-//         console.error('Recipient ID or Access Token missing');
-//         return;
-//     }
-
-//     const response = await fetch('/send_message/', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'X-CSRFToken': '{{ csrf_token }}'
-//         },
-//         body: JSON.stringify({ message: message, recipient_id: recipientId, access_token: accessToken })
-//     });
-
-//     const result = await response.json();
-
-//     // Clear input after sending message
-//     document.getElementById('message').value = '';
-
-//     // Display outgoing message in chat window
-//     displayMessage(message, 'outgoing');
-// }
+    // Display outgoing message in chat window
+    displayMessage(message, 'outgoing');
+}
 
 
     
         
-//         function displayMessage(text, type) {
-//             const chatMessages = document.getElementById('chat-messages');
-//             const messageElement = document.createElement('div');
-//             messageElement.className = 'message ' + (type === 'incoming' ? 'incoming-message' : 'outgoing-message');
+        function displayMessage(text, type) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message ' + (type === 'incoming' ? 'incoming-message' : 'outgoing-message');
 
-//             const messageText = document.createElement('div');
-//             messageText.className = 'message-text';
-//             messageText.textContent = text;
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            messageText.textContent = text;
 
-//             const messageTime = document.createElement('div');
-//             messageTime.className = 'message-time';
-//             messageTime.textContent = new Date().toLocaleTimeString();
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = new Date().toLocaleTimeString();
 
-//             messageElement.appendChild(messageText);
-//             messageElement.appendChild(messageTime);
+            messageElement.appendChild(messageText);
+            messageElement.appendChild(messageTime);
 
-//             chatMessages.appendChild(messageElement);
-//             chatMessages.scrollTop = chatMessages.scrollHeight;
-//         }
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
     </script>
 </body>
