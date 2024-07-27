@@ -438,8 +438,12 @@ function loadConversation(conversationId, accessToken) {
 
             if (data.messages) {
                 console.log(`Messages found: ${data.messages.data.length}`);
+                
                 // Sort messages by created_time
-                const sortedMessages = data.messages.data.sort((a, b) => new Date(a.created_time) - new Date(b.created_time));
+                const sortedMessages = data.messages.data.sort((a, b) => {
+                    return new Date(a.created_time) - new Date(b.created_time);
+                });
+                
                 sortedMessages.forEach(messageData => {
                     const messageId = messageData.id;
                     fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
@@ -460,6 +464,44 @@ function loadConversation(conversationId, accessToken) {
         })
         .catch(error => console.error('Error fetching conversation:', error));
 }
+
+
+// function loadConversation(conversationId, accessToken) {
+//     console.log(`Loading conversation ID: ${conversationId}`);
+//     fetch(`https://graph.facebook.com/v20.0/${conversationId}?fields=messages&access_token=${accessToken}`)
+//         .then(response => response.json())
+//         .then(data => {
+//             const chatMessages = document.getElementById('chat-messages');
+//             if (!chatMessages) {
+//                 console.error('Element with ID chat-messages not found');
+//                 return;
+//             }
+//             chatMessages.innerHTML = ''; // Clear existing messages
+
+//             if (data.messages) {
+//                 console.log(`Messages found: ${data.messages.data.length}`);
+//                 // Sort messages by created_time
+//                 const sortedMessages = data.messages.data.sort((a, b) => new Date(a.created_time) - new Date(b.created_time));
+//                 sortedMessages.forEach(messageData => {
+//                     const messageId = messageData.id;
+//                     fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
+//                         .then(response => response.json())
+//                         .then(messageDetails => {
+//                             console.log(`Message details: ${JSON.stringify(messageDetails)}`);
+//                             const recipientId = messageDetails.from.id; // Extract recipient ID
+//                             displayMessage(messageDetails.message, messageDetails.from.id === conversationId ? 'outgoing' : 'incoming');
+//                             // Store recipient ID and access token for sending messages
+//                             window.currentRecipientId = recipientId;
+//                             window.currentAccessToken = accessToken;
+//                         })
+//                         .catch(error => console.error('Error fetching message details:', error));
+//                 });
+//             } else {
+//                 chatMessages.innerHTML = '<p>No messages found.</p>';
+//             }
+//         })
+//         .catch(error => console.error('Error fetching conversation:', error));
+// }
 
 const messageInput = document.getElementById('message');
 if (messageInput) {
