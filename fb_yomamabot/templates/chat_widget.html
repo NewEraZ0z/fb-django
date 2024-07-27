@@ -488,7 +488,7 @@ ul {
                 if (data.messages) {
                     console.log(`Messages found: ${data.messages.data.length}`);
                     messages = data.messages.data;
-                    sortAndDisplayMessages();  // Sort messages and display them
+                    sortAndDisplayMessages(messages, accessToken);  // Sort messages and display them
                 } else {
                     chatMessages.innerHTML = '<p>No messages found.</p>';
                 }
@@ -496,11 +496,11 @@ ul {
             .catch(error => console.error('Error fetching conversation:', error));
     }
 
-    function sortAndDisplayMessages() {
+    function sortAndDisplayMessages(messages, accessToken) {
         messages.sort((a, b) => new Date(a.created_time) - new Date(b.created_time));
         messages.forEach(messageData => {
             const messageId = messageData.id;
-            fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${window.currentAccessToken}`)
+            fetch(`https://graph.facebook.com/v20.0/${messageId}?fields=id,created_time,from,to,message&access_token=${accessToken}`)
                 .then(response => response.json())
                 .then(messageDetails => {
                     console.log(`Message details: ${JSON.stringify(messageDetails)}`);
